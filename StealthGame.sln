@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Machina", "machina\Machina\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestMachina", "machina\TestMachina\TestMachina.csproj", "{F2980FDD-8E8B-48ED-A28D-BFFECCD37729}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "MachinaAssets", "machina\MachinaAssets\MachinaAssets.shproj", "{A0CDBD0E-3A41-42B7-9425-A838BC2C7383}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -64,5 +66,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{4E538349-4060-4F6F-8286-A7EF214C0977} = {8E694CCB-6EA3-4551-AAC0-ED82E2075FE0}
 		{F2980FDD-8E8B-48ED-A28D-BFFECCD37729} = {8E694CCB-6EA3-4551-AAC0-ED82E2075FE0}
+		{A0CDBD0E-3A41-42B7-9425-A838BC2C7383} = {8E694CCB-6EA3-4551-AAC0-ED82E2075FE0}
 	EndGlobalSection
 EndGlobal

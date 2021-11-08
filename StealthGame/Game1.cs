@@ -1,52 +1,39 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Machina.Components;
+using Machina.Engine;
+using Machina.Engine.AssetLibrary;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using StealthGame.Components;
+using StealthGame.Data;
 
 namespace StealthGame
 {
-    public class Game1 : Game
+    public class Game1 : MachinaGame
     {
-        private GraphicsDeviceManager _graphics;
-        private SpriteBatch _spriteBatch;
-
-        public Game1()
+        public Game1(string[] args) : base("Stealth Game", args, new Point(1920,1080), new Point(1920,1080), ResizeBehavior.MaintainDesiredResolution)
         {
-            _graphics = new GraphicsDeviceManager(this);
-            Content.RootDirectory = "Content";
-            IsMouseVisible = true;
         }
 
-        protected override void Initialize()
+        protected override void OnGameLoad()
         {
-            // TODO: Add your initialization logic here
+            var gameScene = SceneLayers.AddNewScene();
+            var actor = gameScene.AddActor("BeatTracker", new Vector2(200,200));
+            
+            var tracker = new BeatTracker();
 
-            base.Initialize();
+            new PlayerInput(actor, tracker);
+            new BoundingRect(actor, new Point(200, 200));
+            var beatText = new BoundedTextRenderer(actor, "0", Assets.GetSpriteFont("DefaultFont"), Color.White);
+            new AdHoc(actor).onUpdate += (dt) =>
+            {
+                beatText.Text = tracker.CurrentBeat.ToString();
+            };
+
         }
 
-        protected override void LoadContent()
+        protected override void PrepareDynamicAssets(AssetLoadTree tree)
         {
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            // TODO: use this.Content to load your game content here
-        }
-
-        protected override void Update(GameTime gameTime)
-        {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
-
-            // TODO: Add your update logic here
-
-            base.Update(gameTime);
-        }
-
-        protected override void Draw(GameTime gameTime)
-        {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            // TODO: Add your drawing code here
-
-            base.Draw(gameTime);
         }
     }
 }
