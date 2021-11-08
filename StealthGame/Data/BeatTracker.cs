@@ -12,5 +12,10 @@ namespace StealthGame.Data
         }
 
         public const float durationOfOneBeat = 0.1f;
+
+        public static float TimeAt(int beatIndex)
+        {
+            return durationOfOneBeat * beatIndex;
+        }
     }
 }

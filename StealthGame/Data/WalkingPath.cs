@@ -28,5 +28,10 @@ namespace StealthGame.Data
             
             return this.path[beatIndex];
         }
+
+        public float TotalBeats()
+        {
+            return this.path.Length * BeatTracker.durationOfOneBeat;
+        }
     }
 }
