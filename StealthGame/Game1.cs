@@ -19,10 +19,16 @@ namespace StealthGame
         protected override void OnGameLoad()
         {
             var gameScene = SceneLayers.AddNewScene();
+
+            var pathBuilder = new PathBuilder(new Vector2(200, 200))
+                .StraightLine(new Vector2(900, 400))
+                .StraightLine(new Vector2(900, 200))
+                .WaitPoint(20)
+                .StraightLine(new Vector2(900, 600))
+                ;
             
-            var pathNodes = PathBuilder.InterpolatePoints(new Vector2(200,200), new Vector2(900,400));
             var beatTracker = new BeatTracker();
-            var walkingPath = new WalkingPath(pathNodes);
+            var walkingPath = pathBuilder.Build();
 
             var actor = gameScene.AddActor("BeatTracker", new Vector2(200, 200));
             new PlayerInput(actor, beatTracker);

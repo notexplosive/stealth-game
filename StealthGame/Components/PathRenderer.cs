@@ -1,4 +1,5 @@
 using System;
+using System.Runtime;
 using Machina.Components;
 using Machina.Engine;
 using Microsoft.Xna.Framework;
@@ -47,8 +48,30 @@ namespace StealthGame.Components
                         || p4 < BeatTracker.durationOfOneBeat
                     ;
 
-                spriteBatch.DrawCircle(new CircleF(point, highlight ? 5f : 3f), 10, highlight ? Color.Red : Color.White,
-                    1f, transform.Depth);
+                if (point is VectorPathPoint)
+                {
+                    var radius = highlight ? 8f : 5f;
+                    var color = highlight ? Color.Red : Color.White;
+                    spriteBatch.DrawCircle(new CircleF(point.position, radius), 10, color, 1f, transform.Depth);
+                }
+                
+                if (point is StartWaitPathPoint waitPathPoint)
+                {
+                    var radius = highlight ? 10f : 8f;
+                    var color = highlight ? Color.Red : Color.White;
+                    spriteBatch.DrawCircle(new CircleF(point.position, radius), 10, color, 1f, transform.Depth);
+                    spriteBatch.DrawString(
+                        MachinaGame.Assets.GetSpriteFont("DefaultFont"),
+                        waitPathPoint.beatDuration.ToString(), 
+                        waitPathPoint.position, 
+                        Color.White, 
+                        0f, 
+                        Vector2.Zero, 
+                        Vector2.One, 
+                        SpriteEffects.None, 
+                        transform.Depth);
+                }
+
                 beatIndex++;
             }
         }

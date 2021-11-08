@@ -20,8 +20,8 @@ namespace StealthGame.Components
             this.tracker = tracker;
             this.path = path;
 
-            transform.Position = this.path.GetPathNodeAt(this.tracker.CurrentBeat);
-            this.currentTargetPosition = this.path.GetPathNodeAt(this.tracker.CurrentBeat);
+            transform.Position = this.path.GetPathNodeAt(this.tracker.CurrentBeat).position;
+            this.currentTargetPosition = this.path.GetPathNodeAt(this.tracker.CurrentBeat).position;
             this.tweenablePosition =
                 new TweenAccessors<Vector2>(() => transform.Position, val => transform.Position = val);
         }
@@ -35,7 +35,7 @@ namespace StealthGame.Components
         private void MoveToNextPoint()
         {
             var previousTarget = this.currentTargetPosition;
-            this.currentTargetPosition = this.path.GetPathNodeAt(this.tracker.CurrentBeat);
+            this.currentTargetPosition = this.path.GetPathNodeAt(this.tracker.CurrentBeat).position;
 
             if (this.currentTargetPosition != previousTarget)
             {

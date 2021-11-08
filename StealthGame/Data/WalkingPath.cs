@@ -7,14 +7,14 @@ namespace StealthGame.Data
 {
     public class WalkingPath
     {
-        public readonly Vector2[] path;
+        public readonly PathPoint[] path;
 
-        public WalkingPath(List<Vector2> path)
+        public WalkingPath(List<PathPoint> path)
         {
             this.path = path.ToArray();
         }
 
-        public Vector2 GetPathNodeAt(int beatIndex)
+        public PathPoint GetPathNodeAt(int beatIndex)
         {
             if (beatIndex < 0)
             {
