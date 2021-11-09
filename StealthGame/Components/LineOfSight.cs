@@ -6,12 +6,12 @@ using StealthGame.Data;
 
 namespace StealthGame.Components
 {
-    public class Vision : BaseComponent
+    public class LineOfSight : BaseComponent
     {
         private readonly Transform playerTransform;
         private readonly Wall[] walls;
 
-        public Vision(Actor actor, Transform playerTransform, Wall[] walls) : base(actor)
+        public LineOfSight(Actor actor, Transform playerTransform, Wall[] walls) : base(actor)
         {
             this.playerTransform = playerTransform;
             this.walls = walls;

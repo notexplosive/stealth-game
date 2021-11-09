@@ -40,13 +40,15 @@ namespace StealthGame
             new PlayerMovement(player, beatTracker, walkingPath);
             new CircleRenderer(player, 32, Color.Orange);
 
-            var eye = gameScene.AddActor("eye", new Vector2(300,300));
-            new Vision(eye, player.transform, new Wall[]
+            var walls = new Wall[]
             {
                 CreateWall(gameScene, new Rectangle(600, 400, 100, 100)),
                 CreateWall(gameScene, new Rectangle(700, 500, 100, 100)),
                 CreateWall(gameScene, new Rectangle(800, 600, 100, 100)),
-            });
+            };
+            
+            var eye = gameScene.AddActor("eye", new Vector2(300,300));
+            new LineOfSight(eye, player.transform, walls);
 
             var path = gameScene.AddActor("Path");
             new PathRenderer(path, walkingPath);
