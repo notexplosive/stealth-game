@@ -22,11 +22,11 @@ namespace StealthGame.Components
         public override void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.DrawLine(transform.Position,
-                transform.Position + new Angle(LeftAngle).ToUnitVector() * 20, Color.White, 1f,
+                transform.Position + new Angle(LeftAngle).ToUnitVector() * 100, Color.White, 1f,
                 transform.Depth);
 
             spriteBatch.DrawLine(transform.Position,
-                transform.Position + new Angle(RightAngle).ToUnitVector() * 20, Color.White, 1f,
+                transform.Position + new Angle(RightAngle).ToUnitVector() * 100, Color.White, 1f,
                 transform.Depth);
         }
 

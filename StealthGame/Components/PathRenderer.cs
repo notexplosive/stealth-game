@@ -16,11 +16,13 @@ namespace StealthGame.Components
         private readonly WalkingPath walkingPath;
         private float currentTime;
         private readonly Dictionary<Vector2,PathPoint> nodesToRender;
+        private readonly EnemyDetection[] enemies;
 
-        public PathRenderer(Actor actor, WalkingPath walkingPath) : base(actor)
+        public PathRenderer(Actor actor, WalkingPath walkingPath, EnemyDetection[] enemies) : base(actor)
         {
             this.walkingPath = walkingPath;
             this.nodesToRender = new Dictionary<Vector2, PathPoint>();
+            this.enemies = enemies;
 
             foreach (var node in this.walkingPath.path)
             {
@@ -54,13 +56,19 @@ namespace StealthGame.Components
                 var timeAtIndex = BeatTracker.Beat2Seconds(beatIndex);
                 var durationOfWholePath = this.walkingPath.TotalBeats();
 
-                float[] increments = new float[] { 0f, durationOfWholePath / 4, durationOfWholePath / 2, durationOfWholePath * 3 / 4 };
+                float[] ghostIncrements = new float[] { 0f, durationOfWholePath / 4, durationOfWholePath / 2, durationOfWholePath * 3 / 4 };
 
                 var highlight = false;
+                var isWithinCone = false;
 
-                foreach (var increment in increments)
+                foreach (var cone in this.enemies)
                 {
-                    var alongTime = (this.currentTime + increment) % durationOfWholePath;
+                    isWithinCone = isWithinCone || cone.CanSeePoint(renderedNode.position);
+                }
+
+                foreach (var ghostIncrement in ghostIncrements)
+                {
+                    var alongTime = (this.currentTime + ghostIncrement) % durationOfWholePath;
                     var beat = (int) BeatTracker.Seconds2Beats(alongTime);
                     var positionAtBeat = this.walkingPath.PathNodeAtBeat(beat).position;
 
@@ -73,6 +81,10 @@ namespace StealthGame.Components
                 {
                     var radius = highlight ? 8f : 5f;
                     var color = highlight ? Color.Red : Color.White;
+                    if (isWithinCone)
+                    {
+                        color = Color.OrangeRed;
+                    }
                     spriteBatch.DrawCircle(new CircleF(renderedNode.position, radius), 10, color, 1f, transform.Depth - depthOffset);
                 }
                 
@@ -80,6 +92,11 @@ namespace StealthGame.Components
                 {
                     var radius = highlight ? 10f : 8f;
                     var color = highlight ? Color.Red : Color.White;
+                    if (isWithinCone)
+                    {
+                        color = Color.OrangeRed;
+                    }
+                    
                     spriteBatch.DrawCircle(new CircleF(renderedNode.position, radius), 10, color, 1f, transform.Depth - depthOffset);
                     spriteBatch.DrawString(
                         MachinaGame.Assets.GetSpriteFont("DefaultFont"),

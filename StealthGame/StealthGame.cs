@@ -47,26 +47,25 @@ namespace StealthGame
                 CreateWall(gameScene, new Rectangle(700, 500, 100, 100)),
                 CreateWall(gameScene, new Rectangle(800, 600, 100, 100)),
             };
+
             
-            var eye = gameScene.AddActor("eye", new Vector2(800,500));
+            var eye = gameScene.AddActor("eye", new Vector2(850,450));
             new LineOfSight(eye, player.transform, walls);
             new FacingDirection(eye, MathF.PI / 4);
-            var cone = new ConeOfVision(eye, MathF.PI / 2);
+            new ConeOfVision(eye, MathF.PI / 2);
+
+            var enemyDetections = new EnemyDetection[]
+            {
+                new EnemyDetection(eye)
+            };
 
             var path = gameScene.AddActor("Path");
-            new PathRenderer(path, walkingPath);
+            new PathRenderer(path, walkingPath, enemyDetections);
             
             new AdHoc(actor).onUpdate += (dt) =>
             {
                 beatText.Text = beatTracker.CurrentBeat.ToString();
-                if (cone.IsWithinCone(player.transform.Position))
-                {
-                    MachinaGame.Print("Can See");
-                }
-                else
-                {
-                    MachinaGame.Print("Cannot See");
-                }
+                eye.transform.Angle += 0.01f;
             };
         }
 

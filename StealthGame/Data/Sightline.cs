@@ -51,5 +51,10 @@ namespace StealthGame.Data
         {
             this.collidePoints.Add(collidePoint);
         }
+
+        public bool IsAbleToSeeTarget()
+        {
+            return this.collidePoints.Count == 0;
+        }
     }
 }

@@ -17,16 +17,11 @@ namespace StealthGame.Components
             this.walls = walls;
         }
 
-        public override void Draw(SpriteBatch spriteBatch)
-        {
-            var sightline = CreateSightline(this.playerTransform.Position);
-            sightline.ApplyWallCollisions(this.walls);
-            sightline.DebugDraw(spriteBatch);
-        }
-
         public Sightline CreateSightline(Vector2 targetPosition)
         {
-            return new Sightline(transform.Position, targetPosition);
+            var sightline = new Sightline(transform.Position, targetPosition);
+            sightline.ApplyWallCollisions(this.walls);
+            return sightline;
         }
     }
 }

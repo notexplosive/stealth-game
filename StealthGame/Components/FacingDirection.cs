@@ -8,11 +8,9 @@ namespace StealthGame.Components
 {
     public class FacingDirection : BaseComponent
     {
-        private readonly float facingAngle;
-
         public FacingDirection(Actor actor, float facingAngle) : base(actor)
         {
-            this.facingAngle = facingAngle;
+            transform.Angle = facingAngle;
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -20,7 +18,7 @@ namespace StealthGame.Components
             spriteBatch.DrawLine(transform.Position, transform.Position + FacingVector * 20, Color.White, 1f, transform.Depth);
         }
 
-        public Vector2 FacingVector => new Angle(this.facingAngle).ToUnitVector();
-        public float Angle => this.facingAngle;
+        public Vector2 FacingVector => new Angle(transform.Angle).ToUnitVector();
+        public float Angle => transform.Angle;
     }
 }
