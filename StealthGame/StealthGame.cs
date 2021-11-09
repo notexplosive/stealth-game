@@ -1,9 +1,11 @@
-﻿using Machina.Components;
+﻿using System;
+using Machina.Components;
 using Machina.Engine;
 using Machina.Engine.AssetLibrary;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using MonoGame.Extended;
 using StealthGame.Components;
 using StealthGame.Data;
 
@@ -34,8 +36,7 @@ namespace StealthGame
             new PlayerInput(actor, beatTracker);
             new BoundingRect(actor, new Point(200, 200));
             var beatText = new BoundedTextRenderer(actor, "0", Assets.GetSpriteFont("DefaultFont"), Color.White);
-            new AdHoc(actor).onUpdate += (dt) => { beatText.Text = beatTracker.CurrentBeat.ToString(); };
-            
+
             var player = gameScene.AddActor("Player");
             new PlayerMovement(player, beatTracker, walkingPath);
             new CircleRenderer(player, 32, Color.Orange);
@@ -47,11 +48,26 @@ namespace StealthGame
                 CreateWall(gameScene, new Rectangle(800, 600, 100, 100)),
             };
             
-            var eye = gameScene.AddActor("eye", new Vector2(300,300));
+            var eye = gameScene.AddActor("eye", new Vector2(800,500));
             new LineOfSight(eye, player.transform, walls);
+            new FacingDirection(eye, MathF.PI / 4);
+            var cone = new ConeOfVision(eye, MathF.PI / 2);
 
             var path = gameScene.AddActor("Path");
             new PathRenderer(path, walkingPath);
+            
+            new AdHoc(actor).onUpdate += (dt) =>
+            {
+                beatText.Text = beatTracker.CurrentBeat.ToString();
+                if (cone.IsWithinCone(player.transform.Position))
+                {
+                    MachinaGame.Print("Can See");
+                }
+                else
+                {
+                    MachinaGame.Print("Cannot See");
+                }
+            };
         }
 
         protected override void PrepareDynamicAssets(AssetLoadTree tree)
