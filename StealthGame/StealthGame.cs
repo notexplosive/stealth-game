@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
 using StealthGame.Components;
 using StealthGame.Data;
+using StealthGame.Data.Enemy;
 
 namespace StealthGame
 {
@@ -29,16 +30,16 @@ namespace StealthGame
                 .StraightLine(new Vector2(1400, 200))
                 ;
             
-            var beatTracker = new BeatTracker();
+            var playerBeatTracker = new BeatTracker();
+            var worldBeatTracker = new BeatTracker();
             var walkingPath = pathBuilder.Build();
 
-            var actor = gameScene.AddActor("BeatTracker", new Vector2(200, 200));
-            new PlayerInput(actor, beatTracker);
-            new BoundingRect(actor, new Point(200, 200));
-            var beatText = new BoundedTextRenderer(actor, "0", Assets.GetSpriteFont("DefaultFont"), Color.White);
-
+            var world = gameScene.AddActor("World");
+            new WorldBeat(world, worldBeatTracker);
+            
             var player = gameScene.AddActor("Player");
-            new PlayerMovement(player, beatTracker, walkingPath);
+            new PlayerInput(player, playerBeatTracker);
+            new PlayerMovement(player, playerBeatTracker, walkingPath);
             new CircleRenderer(player, 32, Color.Orange);
 
             var walls = new Wall[]
@@ -48,25 +49,24 @@ namespace StealthGame
                 CreateWall(gameScene, new Rectangle(800, 600, 100, 100)),
             };
 
-            
-            var eye = gameScene.AddActor("eye", new Vector2(850,450));
-            new LineOfSight(eye, player.transform, walls);
-            new FacingDirection(eye, MathF.PI / 4);
-            new ConeOfVision(eye, MathF.PI / 2);
+            var enemy = gameScene.AddActor("enemy", new Vector2(850,450));
+            new LineOfSight(enemy, player.transform, walls);
+            new FacingDirection(enemy, MathF.PI / 4);
+            var cone = new ConeOfVision(enemy, MathF.PI / 2);
+            new EnemyBehavior(enemy, worldBeatTracker, new Blink(
+                cone,
+                new Blink.Sequence()
+                    .AddOn(20)
+                    .AddOff(5)
+            ));
 
             var enemyDetections = new EnemyDetection[]
             {
-                new EnemyDetection(eye)
+                new EnemyDetection(enemy)
             };
 
             var path = gameScene.AddActor("Path");
             new PathRenderer(path, walkingPath, enemyDetections);
-            
-            new AdHoc(actor).onUpdate += (dt) =>
-            {
-                beatText.Text = beatTracker.CurrentBeat.ToString();
-                eye.transform.Angle += 0.01f;
-            };
         }
 
         protected override void PrepareDynamicAssets(AssetLoadTree tree)

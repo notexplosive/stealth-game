@@ -12,6 +12,7 @@ namespace StealthGame.Components
     {
         private readonly float visionWidth;
         private readonly FacingDirection facingDirection;
+        private bool isActive;
 
         public ConeOfVision(Actor actor, float visionWidth) : base(actor)
         {
@@ -21,6 +22,11 @@ namespace StealthGame.Components
 
         public override void Draw(SpriteBatch spriteBatch)
         {
+            if (!this.isActive)
+            {
+                return;
+            }
+            
             spriteBatch.DrawLine(transform.Position,
                 transform.Position + new Angle(LeftAngle).ToUnitVector() * 100, Color.White, 1f,
                 transform.Depth);
@@ -38,8 +44,14 @@ namespace StealthGame.Components
         public bool IsWithinCone(Vector2 destination)
         {
             var displacement = destination - transform.Position;
-            return new Angle(LeftAngle).ToUnitVector().Dot(displacement) > 0 &&
+            return this.isActive &&
+                   new Angle(LeftAngle).ToUnitVector().Dot(displacement) > 0 &&
                    new Angle(RightAngle).ToUnitVector().Dot(displacement) > 0;
+        }
+
+        public void SetActive(bool active)
+        {
+            this.isActive = active;
         }
     }
 }
