@@ -9,9 +9,9 @@ using StealthGame.Data;
 
 namespace StealthGame
 {
-    public class Game1 : MachinaGame
+    public class StealthGame : MachinaGame
     {
-        public Game1(string[] args) : base("Stealth Game", args, new Point(1920, 1080), new Point(1920, 1080),
+        public StealthGame(string[] args) : base("Stealth Game", args, new Point(1920, 1080), new Point(1920, 1080),
             ResizeBehavior.MaintainDesiredResolution)
         {
         }
@@ -39,6 +39,14 @@ namespace StealthGame
             var player = gameScene.AddActor("Player");
             new PlayerMovement(player, beatTracker, walkingPath);
             new CircleRenderer(player, 32, Color.Orange);
+
+            var wallActor = gameScene.AddActor("enemy", new Vector2(400, 400));
+            new BoundingRect(wallActor, new Point(300, 300));
+            new BoundingRectFill(wallActor, Color.Orange);
+            var wall = new Wall(wallActor);
+
+            var eye = gameScene.AddActor("eye", new Vector2(300,300));
+            new Vision(eye, player.transform, new Wall[] { wall });
 
             var path = gameScene.AddActor("Path");
             new PathRenderer(path, walkingPath);
