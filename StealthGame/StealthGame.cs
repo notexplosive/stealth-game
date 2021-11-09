@@ -40,13 +40,13 @@ namespace StealthGame
             new PlayerMovement(player, beatTracker, walkingPath);
             new CircleRenderer(player, 32, Color.Orange);
 
-            var wallActor = gameScene.AddActor("enemy", new Vector2(400, 400));
-            new BoundingRect(wallActor, new Point(300, 300));
-            new BoundingRectFill(wallActor, Color.Orange);
-            var wall = new Wall(wallActor);
-
             var eye = gameScene.AddActor("eye", new Vector2(300,300));
-            new Vision(eye, player.transform, new Wall[] { wall });
+            new Vision(eye, player.transform, new Wall[]
+            {
+                CreateWall(gameScene, new Rectangle(600, 400, 100, 100)),
+                CreateWall(gameScene, new Rectangle(700, 500, 100, 100)),
+                CreateWall(gameScene, new Rectangle(800, 600, 100, 100)),
+            });
 
             var path = gameScene.AddActor("Path");
             new PathRenderer(path, walkingPath);
@@ -54,6 +54,14 @@ namespace StealthGame
 
         protected override void PrepareDynamicAssets(AssetLoadTree tree)
         {
+        }
+
+        public Wall CreateWall(Scene gameScene, Rectangle rectangle)
+        {
+            var wallActor = gameScene.AddActor("enemy", rectangle.Location.ToVector2());
+            new BoundingRect(wallActor, rectangle.Size);
+            new BoundingRectFill(wallActor, Color.Orange);
+            return new Wall(wallActor);
         }
     }
 }
