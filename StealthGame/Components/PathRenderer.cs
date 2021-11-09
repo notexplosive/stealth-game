@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Runtime;
 using Machina.Components;
+using Machina.Data;
 using Machina.Engine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -13,10 +15,28 @@ namespace StealthGame.Components
     {
         private readonly WalkingPath walkingPath;
         private float currentTime;
+        private readonly Dictionary<Vector2,PathPoint> nodesToRender;
 
         public PathRenderer(Actor actor, WalkingPath walkingPath) : base(actor)
         {
             this.walkingPath = walkingPath;
+            this.nodesToRender = new Dictionary<Vector2, PathPoint>();
+
+            foreach (var node in this.walkingPath.path)
+            {
+                if (!this.nodesToRender.ContainsKey(node.position))
+                {
+                    this.nodesToRender.Add(node.position, node);
+                }
+                else
+                {
+                    var oldNode = this.nodesToRender[node.position];
+                    if (oldNode.RenderPriority < node.RenderPriority)
+                    {
+                        this.nodesToRender[node.position] = node;
+                    }
+                }
+            }
         }
 
         public override void Update(float dt)
@@ -29,47 +49,48 @@ namespace StealthGame.Components
         public override void Draw(SpriteBatch spriteBatch)
         {
             var beatIndex = 0;
-            foreach (var point in this.walkingPath.path)
+            foreach (var renderedNode in this.nodesToRender.Values)
             {
-                var timeAtIndex = BeatTracker.TimeAt(beatIndex);
+                var timeAtIndex = BeatTracker.Beat2Seconds(beatIndex);
                 var durationOfWholePath = this.walkingPath.TotalBeats();
-                var p1 = Math.Abs(this.currentTime - timeAtIndex);
-                var p2 = Math.Abs((this.currentTime + durationOfWholePath / 2) % durationOfWholePath -
-                                  timeAtIndex);
-                var p3 = Math.Abs((this.currentTime + durationOfWholePath / 4) % durationOfWholePath -
-                                  timeAtIndex);
-                var p4 = Math.Abs((this.currentTime + durationOfWholePath * 3 / 4) % durationOfWholePath -
-                                  timeAtIndex);
 
-                var highlight =
-                        p1 < BeatTracker.durationOfOneBeat
-                        || p2 < BeatTracker.durationOfOneBeat
-                        || p3 < BeatTracker.durationOfOneBeat
-                        || p4 < BeatTracker.durationOfOneBeat
-                    ;
+                float[] increments = new float[] { 0f, durationOfWholePath / 4, durationOfWholePath / 2, durationOfWholePath * 3 / 4 };
 
-                if (point is VectorPathPoint)
+                var highlight = false;
+
+                foreach (var increment in increments)
+                {
+                    var alongTime = (this.currentTime + increment) % durationOfWholePath;
+                    var beat = (int) BeatTracker.Seconds2Beats(alongTime);
+                    var positionAtBeat = this.walkingPath.PathNodeAtBeat(beat).position;
+
+                    highlight = highlight || (positionAtBeat == renderedNode.position);
+                }
+
+                var depthOffset = highlight ? -1 : 0;
+
+                if (renderedNode is VectorPathPoint)
                 {
                     var radius = highlight ? 8f : 5f;
                     var color = highlight ? Color.Red : Color.White;
-                    spriteBatch.DrawCircle(new CircleF(point.position, radius), 10, color, 1f, transform.Depth);
+                    spriteBatch.DrawCircle(new CircleF(renderedNode.position, radius), 10, color, 1f, transform.Depth - depthOffset);
                 }
                 
-                if (point is StartWaitPathPoint waitPathPoint)
+                if (renderedNode is StartWaitPathPoint waitPathPoint)
                 {
                     var radius = highlight ? 10f : 8f;
                     var color = highlight ? Color.Red : Color.White;
-                    spriteBatch.DrawCircle(new CircleF(point.position, radius), 10, color, 1f, transform.Depth);
+                    spriteBatch.DrawCircle(new CircleF(renderedNode.position, radius), 10, color, 1f, transform.Depth - depthOffset);
                     spriteBatch.DrawString(
                         MachinaGame.Assets.GetSpriteFont("DefaultFont"),
-                        waitPathPoint.beatDuration.ToString(), 
+                        BeatTracker.Beat2Seconds(waitPathPoint.beatDuration).ToString(), 
                         waitPathPoint.position, 
                         Color.White, 
                         0f, 
                         Vector2.Zero, 
                         Vector2.One, 
                         SpriteEffects.None, 
-                        transform.Depth);
+                        transform.Depth - 10);
                 }
 
                 beatIndex++;

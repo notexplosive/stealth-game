@@ -10,5 +10,7 @@ namespace StealthGame.Data
         {
             this.position = position;
         }
+
+        public abstract int RenderPriority { get; }
     }
 }

@@ -20,8 +20,8 @@ namespace StealthGame.Components
             this.tracker = tracker;
             this.path = path;
 
-            transform.Position = this.path.GetPathNodeAt(this.tracker.CurrentBeat).position;
-            this.currentTargetPosition = this.path.GetPathNodeAt(this.tracker.CurrentBeat).position;
+            transform.Position = this.path.PathNodeAtBeat(this.tracker.CurrentBeat).position;
+            this.currentTargetPosition = this.path.PathNodeAtBeat(this.tracker.CurrentBeat).position;
             this.tweenablePosition =
                 new TweenAccessors<Vector2>(() => transform.Position, val => transform.Position = val);
         }
@@ -35,11 +35,11 @@ namespace StealthGame.Components
         private void MoveToNextPoint()
         {
             var previousTarget = this.currentTargetPosition;
-            this.currentTargetPosition = this.path.GetPathNodeAt(this.tracker.CurrentBeat).position;
+            this.currentTargetPosition = this.path.PathNodeAtBeat(this.tracker.CurrentBeat).position;
 
             if (this.currentTargetPosition != previousTarget)
             {
-                this.tween.AppendVectorTween(this.currentTargetPosition, BeatTracker.durationOfOneBeat,
+                this.tween.AppendVectorTween(this.currentTargetPosition, BeatTracker.SecondsPerBeat,
                     EaseFuncs.Linear,
                     this.tweenablePosition);
             }

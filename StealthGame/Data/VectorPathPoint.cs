@@ -7,5 +7,7 @@ namespace StealthGame.Data
         public VectorPathPoint(Vector2 position) : base(position)
         {
         }
+
+        public override int RenderPriority => 0;
     }
 }

@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestMachina", "machina\Test
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "MachinaAssets", "machina\MachinaAssets\MachinaAssets.shproj", "{A0CDBD0E-3A41-42B7-9425-A838BC2C7383}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestStealthGame", "TestStealthGame\TestStealthGame.csproj", "{42287179-E9BF-4615-AB89-C6F401A91BEB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -62,6 +64,18 @@ Global
 		{F2980FDD-8E8B-48ED-A28D-BFFECCD37729}.Release|x64.Build.0 = Release|Any CPU
 		{F2980FDD-8E8B-48ED-A28D-BFFECCD37729}.Release|x86.ActiveCfg = Release|Any CPU
 		{F2980FDD-8E8B-48ED-A28D-BFFECCD37729}.Release|x86.Build.0 = Release|Any CPU
+		{42287179-E9BF-4615-AB89-C6F401A91BEB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42287179-E9BF-4615-AB89-C6F401A91BEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42287179-E9BF-4615-AB89-C6F401A91BEB}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{42287179-E9BF-4615-AB89-C6F401A91BEB}.Debug|x64.Build.0 = Debug|Any CPU
+		{42287179-E9BF-4615-AB89-C6F401A91BEB}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{42287179-E9BF-4615-AB89-C6F401A91BEB}.Debug|x86.Build.0 = Debug|Any CPU
+		{42287179-E9BF-4615-AB89-C6F401A91BEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42287179-E9BF-4615-AB89-C6F401A91BEB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{42287179-E9BF-4615-AB89-C6F401A91BEB}.Release|x64.ActiveCfg = Release|Any CPU
+		{42287179-E9BF-4615-AB89-C6F401A91BEB}.Release|x64.Build.0 = Release|Any CPU
+		{42287179-E9BF-4615-AB89-C6F401A91BEB}.Release|x86.ActiveCfg = Release|Any CPU
+		{42287179-E9BF-4615-AB89-C6F401A91BEB}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{4E538349-4060-4F6F-8286-A7EF214C0977} = {8E694CCB-6EA3-4551-AAC0-ED82E2075FE0}

@@ -10,6 +10,8 @@ namespace StealthGame.Data
         {
             this.beatDuration = beatDuration;
         }
+
+        public override int RenderPriority => 10;
     }
     
     public class EndWaitPathPoint : PathPoint
@@ -18,5 +20,7 @@ namespace StealthGame.Data
         public EndWaitPathPoint(Vector2 position) : base(position)
         {
         }
+
+        public override int RenderPriority => 0;
     }
 }

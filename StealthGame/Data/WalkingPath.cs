@@ -14,7 +14,7 @@ namespace StealthGame.Data
             this.path = path.ToArray();
         }
 
-        public PathPoint GetPathNodeAt(int beatIndex)
+        public PathPoint PathNodeAtBeat(int beatIndex)
         {
             if (beatIndex < 0)
             {
@@ -31,7 +31,7 @@ namespace StealthGame.Data
 
         public float TotalBeats()
         {
-            return this.path.Length * BeatTracker.durationOfOneBeat;
+            return this.path.Length * BeatTracker.SecondsPerBeat;
         }
     }
 }

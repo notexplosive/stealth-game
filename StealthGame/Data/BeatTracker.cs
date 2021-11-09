@@ -7,15 +7,20 @@ namespace StealthGame.Data
 
         public void AddBeat(float dt)
         {
-            var beats = dt / durationOfOneBeat;
+            var beats = Seconds2Beats(dt);
             this.internalBeat += beats;
         }
 
-        public const float durationOfOneBeat = 0.1f;
+        public const float SecondsPerBeat = 0.1f;
 
-        public static float TimeAt(int beatIndex)
+        public static float Beat2Seconds(int beats)
         {
-            return durationOfOneBeat * beatIndex;
+            return SecondsPerBeat * beats;
+        }
+
+        public static float Seconds2Beats(float seconds)
+        {
+            return seconds / SecondsPerBeat;
         }
     }
 }

@@ -22,9 +22,9 @@ namespace StealthGame
 
             var pathBuilder = new PathBuilder(new Vector2(200, 200))
                 .StraightLine(new Vector2(900, 400))
-                .StraightLine(new Vector2(900, 200))
+                .StraightLine(new Vector2(900, 800))
                 .WaitPoint(20)
-                .StraightLine(new Vector2(900, 600))
+                .StraightLine(new Vector2(1400, 200))
                 ;
             
             var beatTracker = new BeatTracker();
