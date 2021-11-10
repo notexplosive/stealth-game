@@ -121,5 +121,11 @@ namespace StealthGame.Data
                 BeatHit?.Invoke(CurrentBeat);
             }
         }
+
+        public void RegisterBehavior(IEnemyBehavior behavior)
+        {
+            BeatHit += behavior.OnBeat;
+            AppendTotalBeatCount(behavior.TotalBeats);
+        }
     }
 }

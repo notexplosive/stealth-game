@@ -73,7 +73,7 @@ namespace StealthGame
                 new BeatAnimationSequence(enemyActor.transform)
                     .LookTo(MathF.PI, 20)
                     .LookTo(0, 20));
-            new EnemyBehaviorWrapper(worldBeatTracker, ai);
+            worldBeatTracker.RegisterBehavior(ai);
             enemyDetections.Add(new EnemyDetection(enemyActor));
 
             var path = gameScene.AddActor("Path");
@@ -87,7 +87,7 @@ namespace StealthGame
             new LineOfSight(enemyActor, player.transform, walls);
             new FacingDirection(enemyActor, angle);
             var cone = new ConeOfVision(enemyActor, MathF.PI / 2);
-            new EnemyBehaviorWrapper(worldBeatTracker, new Blink(
+            worldBeatTracker.RegisterBehavior(new Blink(
                 cone,
                 blinkSequence
             ));
