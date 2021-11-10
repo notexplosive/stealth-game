@@ -7,7 +7,7 @@ namespace StealthGame.Data
     public class PathBuilder
     {
         private readonly List<PathPoint> builtPath = new List<PathPoint>();
-        public const float stepLength = 20f;
+        public const float PixelsPerStep = 20f;
         public Vector2 CurrentPoint => this.builtPath[^1].position;
 
         public PathBuilder(Vector2 start)
@@ -15,11 +15,11 @@ namespace StealthGame.Data
             this.builtPath.Add(new VectorPathPoint(start));
         }
         
-        public PathBuilder StraightLine(Vector2 end)
+        public PathBuilder AddStraightLine(Vector2 end)
         {
             var start = this.builtPath[^1].position;
             var displacement = end - start;
-            var direction = displacement.NormalizedCopy() * stepLength;
+            var direction = displacement.NormalizedCopy() * PixelsPerStep;
             var currentPoint = start;
             var directionLength = direction.Length();
 
@@ -37,7 +37,7 @@ namespace StealthGame.Data
             return new WalkingPath(this.builtPath);
         }
 
-        public PathBuilder WaitPoint(int waitTimeBeats)
+        public PathBuilder AddWaitPoint(int waitTimeBeats)
         {
             this.builtPath.Add(new StartWaitPathPoint(CurrentPoint, waitTimeBeats));
 

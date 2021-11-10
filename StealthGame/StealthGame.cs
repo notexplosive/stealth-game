@@ -25,10 +25,10 @@ namespace StealthGame
             var gameScene = SceneLayers.AddNewScene();
 
             var pathBuilder = new PathBuilder(new Vector2(200, 200))
-                    .StraightLine(new Vector2(900, 400))
-                    .StraightLine(new Vector2(900, 800))
-                    .WaitPoint(20)
-                    .StraightLine(new Vector2(1400, 200))
+                    .AddStraightLine(new Vector2(900, 400))
+                    .AddStraightLine(new Vector2(900, 800))
+                    .AddWaitPoint(20)
+                    .AddStraightLine(new Vector2(1400, 200))
                 ;
 
             var playerBeatTracker = new BeatTracker(false);
