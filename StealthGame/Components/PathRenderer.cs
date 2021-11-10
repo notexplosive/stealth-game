@@ -16,9 +16,9 @@ namespace StealthGame.Components
         private readonly WalkingPath walkingPath;
         private float currentTime;
         private readonly Dictionary<Vector2,PathPoint> nodesToRender;
-        private readonly EnemyDetection[] enemies;
+        private readonly List<EnemyDetection> enemies;
 
-        public PathRenderer(Actor actor, WalkingPath walkingPath, EnemyDetection[] enemies) : base(actor)
+        public PathRenderer(Actor actor, WalkingPath walkingPath, List<EnemyDetection> enemies) : base(actor)
         {
             this.walkingPath = walkingPath;
             this.nodesToRender = new Dictionary<Vector2, PathPoint>();

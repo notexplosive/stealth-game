@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Machina.Components;
 using Machina.Engine;
 using Machina.Engine.AssetLibrary;
@@ -24,19 +25,24 @@ namespace StealthGame
             var gameScene = SceneLayers.AddNewScene();
 
             var pathBuilder = new PathBuilder(new Vector2(200, 200))
-                .StraightLine(new Vector2(900, 400))
-                .StraightLine(new Vector2(900, 800))
-                .WaitPoint(20)
-                .StraightLine(new Vector2(1400, 200))
+                    .StraightLine(new Vector2(900, 400))
+                    .StraightLine(new Vector2(900, 800))
+                    .WaitPoint(20)
+                    .StraightLine(new Vector2(1400, 200))
                 ;
-            
+
             var playerBeatTracker = new BeatTracker();
             var worldBeatTracker = new BeatTracker();
             var walkingPath = pathBuilder.Build();
 
+            worldBeatTracker.LoopHit += () =>
+            {
+                MachinaGame.Print("Loop!");
+            };
+
             var world = gameScene.AddActor("World");
             new WorldBeat(world, worldBeatTracker);
-            
+
             var player = gameScene.AddActor("Player");
             new PlayerInput(player, playerBeatTracker);
             new PlayerMovement(player, playerBeatTracker, walkingPath);
@@ -46,27 +52,39 @@ namespace StealthGame
             {
                 CreateWall(gameScene, new Rectangle(600, 400, 100, 100)),
                 CreateWall(gameScene, new Rectangle(700, 500, 100, 100)),
-                CreateWall(gameScene, new Rectangle(800, 600, 100, 100)),
+                CreateWall(gameScene, new Rectangle(800, 600, 100, 100))
             };
 
-            var enemy = gameScene.AddActor("enemy", new Vector2(850,450));
-            new LineOfSight(enemy, player.transform, walls);
-            new FacingDirection(enemy, MathF.PI / 4);
-            var cone = new ConeOfVision(enemy, MathF.PI / 2);
-            new EnemyBehavior(enemy, worldBeatTracker, new Blink(
-                cone,
+            var enemyDetections = new List<EnemyDetection>();
+
+            CreateBlinkingEnemy(gameScene, new Vector2(850, 450), MathF.PI / 2, player, walls, worldBeatTracker, enemyDetections,
                 new Blink.Sequence()
                     .AddOn(20)
                     .AddOff(5)
-            ));
+            );
 
-            var enemyDetections = new EnemyDetection[]
-            {
-                new EnemyDetection(enemy)
-            };
+            CreateBlinkingEnemy(gameScene, new Vector2(250, 250), 0, player, walls, worldBeatTracker, enemyDetections,
+                new Blink.Sequence()
+                    .AddOn(25)
+                    .AddOff(5)
+            );
 
             var path = gameScene.AddActor("Path");
             new PathRenderer(path, walkingPath, enemyDetections);
+        }
+
+        private static void CreateBlinkingEnemy(Scene gameScene, Vector2 position, float angle, Actor player, Wall[] walls,
+            BeatTracker worldBeatTracker, List<EnemyDetection> enemyDetections, Blink.Sequence blinkSequence)
+        {
+            var enemyActor = gameScene.AddActor("enemy", position);
+            new LineOfSight(enemyActor, player.transform, walls);
+            new FacingDirection(enemyActor, angle);
+            var cone = new ConeOfVision(enemyActor, MathF.PI / 2);
+            new EnemyBehavior(enemyActor, worldBeatTracker, new Blink(
+                cone,
+                blinkSequence
+            ));
+            enemyDetections.Add(new EnemyDetection(enemyActor));
         }
 
         protected override void PrepareDynamicAssets(AssetLoadTree tree)
