@@ -13,26 +13,12 @@ namespace StealthGame.Data.Enemy
     {
         private List<TransformState> states = new List<TransformState>();
         private readonly TransformState startingState;
-        private readonly Transform transform;
         
-        private readonly TweenChain positionTween = new TweenChain();
-        private readonly TweenAccessors<Vector2> tweenablePosition;
-        
-        private readonly TweenChain angleTween = new TweenChain();
-        private readonly TweenAccessors<float> tweenableAngle;
-        private TransformState previousTargetState;
 
         public TransformBeatAnimation(Transform transform)
         {
-            this.transform = transform;
             this.startingState = new TransformState(transform.Position, transform.Angle);
 
-            this.previousTargetState = this.startingState;
-            
-            this.tweenablePosition =
-                new TweenAccessors<Vector2>(() => transform.Position, val => transform.Position = val);
-            this.tweenableAngle =
-                new TweenAccessors<float>(() => transform.Angle, val => transform.Angle = val);
         }
 
         public int TotalLength => this.states.Count;
@@ -68,31 +54,6 @@ namespace StealthGame.Data.Enemy
             }
 
             return this.states[currentBeat % TotalLength];
-        }
-
-        public void UpdateTween(float dt)
-        {
-            this.angleTween.Update(dt);
-            this.positionTween.Update(dt);
-        }
-
-        public void ApplyToActor(TransformState state)
-        {
-            if (state.position != previousTargetState.position)
-            {
-                this.positionTween.AppendVectorTween(state.position, BeatTracker.SecondsPerBeat,
-                    EaseFuncs.Linear,
-                    this.tweenablePosition);
-            }
-            
-            if (state.angle != previousTargetState.angle)
-            {
-                this.positionTween.AppendFloatTween(state.angle, BeatTracker.SecondsPerBeat,
-                    EaseFuncs.Linear,
-                    this.tweenableAngle);
-            }
-            
-            this.previousTargetState = state;
         }
 
         public TransformBeatAnimation WaitFor(int beats)
