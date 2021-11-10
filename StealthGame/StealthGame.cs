@@ -67,6 +67,7 @@ namespace StealthGame
                     .MoveTo(new Vector2(800,100))
                     .WaitFor(5)
                     .LookTo(MathF.PI * 2, 20)
+                    .ForceSetAngle(0f) // this should happen automatically
                     .MoveTo(new Vector2(1200,100))
             );
 

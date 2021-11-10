@@ -38,11 +38,6 @@ namespace StealthGame.Data.Enemy
             
             AddAngleState(destinationAngle);
 
-            if (destinationAngle == MathF.PI * 2)
-            {
-                ForceSetAngle(0f);
-            }
-
             return this;
         }
 
