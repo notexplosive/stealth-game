@@ -12,13 +12,12 @@ namespace StealthGame.Data.Enemy
     public class TransformBeatAnimation
     {
         private List<TransformState> states = new List<TransformState>();
-        private readonly TransformState startingState;
+        public readonly TransformState startingState;
         
 
-        public TransformBeatAnimation(Transform transform)
+        public TransformBeatAnimation(TransformState startingState)
         {
-            this.startingState = new TransformState(transform.Position, transform.Angle);
-
+            this.startingState = startingState;
         }
 
         public int TotalLength => this.states.Count;

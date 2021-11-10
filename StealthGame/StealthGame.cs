@@ -35,10 +35,7 @@ namespace StealthGame
             var worldBeatTracker = new BeatTracker(true);
             var walkingPath = pathBuilder.Build();
 
-            worldBeatTracker.LoopHit += () =>
-            {
-                MachinaGame.Print("Loop!");
-            };
+            worldBeatTracker.LoopHit += () => { Print("Loop!"); };
 
             var world = gameScene.AddActor("World");
             new WorldBeat(world, worldBeatTracker);
@@ -57,31 +54,38 @@ namespace StealthGame
 
             var enemyDetections = new List<EnemyDetection>();
 
-            CreateBlinkingEnemy(gameScene, new Vector2(850, 450), MathF.PI / 2, player, walls, worldBeatTracker, enemyDetections,
+            CreateBlinkingEnemy(gameScene, new Vector2(850, 450), MathF.PI / 2, player, walls, worldBeatTracker,
+                enemyDetections,
                 new Blink.Sequence()
                     .AddOn(20)
                     .AddOff(5)
             );
 
-            var cameraAngle = 0f;
-            var cameraPosition = new Vector2(1200, 100);
-            var enemyActor = gameScene.AddActor("enemy", cameraPosition);
-            new LineOfSight(enemyActor, player.transform, walls);
-            new FacingDirection(enemyActor, cameraAngle);
-            new ConeOfVision(enemyActor, MathF.PI / 2);
-            var ai = new AnimatedEnemy(enemyActor,
-                new TransformBeatAnimation(enemyActor.transform)
+            CameraEnemy(gameScene, player, walls, worldBeatTracker,
+                enemyDetections,
+                new TransformBeatAnimation(new TransformState(new Vector2(1200, 100), 0))
                     .LookTo(MathF.PI, 20)
                     .WaitFor(5)
                     .LookTo(0, 20));
-            worldBeatTracker.RegisterBehavior(ai);
-            enemyDetections.Add(new EnemyDetection(enemyActor));
 
             var path = gameScene.AddActor("Path");
             new PathRenderer(path, walkingPath, enemyDetections);
         }
 
-        private static void CreateBlinkingEnemy(Scene gameScene, Vector2 position, float angle, Actor player, Wall[] walls,
+        private static void CameraEnemy(Scene gameScene, Actor player, Wall[] walls,
+            BeatTracker worldBeatTracker, List<EnemyDetection> enemyDetections, TransformBeatAnimation animation)
+        {
+            var enemyActor = gameScene.AddActor("enemy", animation.startingState.position);
+            new LineOfSight(enemyActor, player.transform, walls);
+            new FacingDirection(enemyActor, animation.startingState.angle);
+            new ConeOfVision(enemyActor, MathF.PI / 2);
+            var enemy = new AnimatedEnemy(enemyActor, animation);
+            worldBeatTracker.RegisterBehavior(enemy);
+            enemyDetections.Add(new EnemyDetection(enemyActor));
+        }
+
+        private static void CreateBlinkingEnemy(Scene gameScene, Vector2 position, float angle, Actor player,
+            Wall[] walls,
             BeatTracker worldBeatTracker, List<EnemyDetection> enemyDetections, Blink.Sequence blinkSequence)
         {
             var enemyActor = gameScene.AddActor("enemy", position);
