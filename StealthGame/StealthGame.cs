@@ -72,6 +72,7 @@ namespace StealthGame
             var ai = new AnimatedEnemy(enemyActor,
                 new BeatAnimationSequence(enemyActor.transform)
                     .LookTo(MathF.PI, 20)
+                    .WaitFor(5)
                     .LookTo(0, 20));
             worldBeatTracker.RegisterBehavior(ai);
             enemyDetections.Add(new EnemyDetection(enemyActor));

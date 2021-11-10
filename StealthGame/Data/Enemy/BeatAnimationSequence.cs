@@ -94,5 +94,15 @@ namespace StealthGame.Data.Enemy
             
             this.previousTargetState = state;
         }
+
+        public BeatAnimationSequence WaitFor(int beats)
+        {
+            for (int i = 0; i < beats; i++)
+            {
+                this.states.Add(LatestState());
+            }
+
+            return this;
+        }
     }
 }
