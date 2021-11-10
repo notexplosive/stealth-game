@@ -7,11 +7,17 @@ namespace StealthGame.Data
 {
     public class BeatTracker
     {
+        private readonly bool doesLoop;
         public event Action<int> BeatHit;
         public event Action LoopHit;
         private float internalBeat;
         public int CurrentBeat => (int) this.internalBeat;
 
+        public BeatTracker(bool doesLoop)
+        {
+            this.doesLoop = doesLoop;
+        }
+        
         public void AddBeat(float dt)
         {
             var beats = Seconds2Beats(dt);
@@ -23,10 +29,13 @@ namespace StealthGame.Data
                 BeatHit?.Invoke(CurrentBeat);
             }
 
-            if (this.internalBeat > TotalBeats)
+            if (this.doesLoop)
             {
-                LoopHit?.Invoke();
-                this.internalBeat %= TotalBeats;
+                if (this.internalBeat > TotalBeats)
+                {
+                    LoopHit?.Invoke();
+                    this.internalBeat %= TotalBeats;
+                }
             }
         }
 
@@ -95,6 +104,22 @@ namespace StealthGame.Data
             }
 
             return a;
+        }
+
+        public void SubtractBeat(float dt)
+        {
+            var beats = Seconds2Beats(dt);
+            var oldIntegerBeat = CurrentBeat;
+            this.internalBeat -= beats;
+            if (this.internalBeat < 0)
+            {
+                this.internalBeat = 0;
+            }
+            
+            if (CurrentBeat != oldIntegerBeat)
+            {
+                BeatHit?.Invoke(CurrentBeat);
+            }
         }
     }
 }

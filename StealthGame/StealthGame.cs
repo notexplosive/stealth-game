@@ -31,8 +31,8 @@ namespace StealthGame
                     .StraightLine(new Vector2(1400, 200))
                 ;
 
-            var playerBeatTracker = new BeatTracker();
-            var worldBeatTracker = new BeatTracker();
+            var playerBeatTracker = new BeatTracker(false);
+            var worldBeatTracker = new BeatTracker(true);
             var walkingPath = pathBuilder.Build();
 
             worldBeatTracker.LoopHit += () =>
