@@ -12,8 +12,8 @@ namespace StealthGame.Components
         private readonly BeatTracker tracker;
         private readonly WalkingPath path;
         private readonly TweenChain tween = new TweenChain();
-        private Vector2 currentTargetPosition;
         private readonly TweenAccessors<Vector2> tweenablePosition;
+        private Vector2 currentTargetPosition;
 
         public PlayerMovement(Actor actor, BeatTracker tracker, WalkingPath path) : base(actor)
         {

@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Net.NetworkInformation;
 using Machina.Components;
+using Machina.Data;
+using Machina.ThirdParty;
+using Microsoft.Xna.Framework;
 using MonoGame.Extended;
 
 namespace StealthGame.Data.Enemy
@@ -11,11 +14,25 @@ namespace StealthGame.Data.Enemy
         private List<TransformState> states = new List<TransformState>();
         private readonly TransformState startingState;
         private readonly Transform transform;
+        
+        private readonly TweenChain positionTween = new TweenChain();
+        private readonly TweenAccessors<Vector2> tweenablePosition;
+        
+        private readonly TweenChain angleTween = new TweenChain();
+        private readonly TweenAccessors<float> tweenableAngle;
+        private TransformState previousTargetState;
 
         public BeatAnimationSequence(Transform transform)
         {
             this.transform = transform;
             this.startingState = new TransformState(transform.Position, transform.Angle);
+
+            this.previousTargetState = this.startingState;
+            
+            this.tweenablePosition =
+                new TweenAccessors<Vector2>(() => transform.Position, val => transform.Position = val);
+            this.tweenableAngle =
+                new TweenAccessors<float>(() => transform.Angle, val => transform.Angle = val);
         }
 
         public int TotalLength => this.states.Count;
@@ -50,18 +67,32 @@ namespace StealthGame.Data.Enemy
                 return this.startingState;
             }
 
-            if (currentBeat >= TotalLength)
-            {
-                return LatestState();
-            }
-            
-            return this.states[currentBeat];
+            return this.states[currentBeat % TotalLength];
+        }
+
+        public void UpdateTween(float dt)
+        {
+            this.angleTween.Update(dt);
+            this.positionTween.Update(dt);
         }
 
         public void ApplyToActor(TransformState state)
         {
-            this.transform.Position = state.position;
-            this.transform.Angle = state.angle;
+            if (state.position != previousTargetState.position)
+            {
+                this.positionTween.AppendVectorTween(state.position, BeatTracker.SecondsPerBeat,
+                    EaseFuncs.Linear,
+                    this.tweenablePosition);
+            }
+            
+            if (state.angle != previousTargetState.angle)
+            {
+                this.positionTween.AppendFloatTween(state.angle, BeatTracker.SecondsPerBeat,
+                    EaseFuncs.Linear,
+                    this.tweenableAngle);
+            }
+            
+            this.previousTargetState = state;
         }
     }
 }
