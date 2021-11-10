@@ -70,7 +70,7 @@ namespace StealthGame
             new FacingDirection(enemyActor, cameraAngle);
             new ConeOfVision(enemyActor, MathF.PI / 2);
             var ai = new AnimatedEnemy(enemyActor,
-                new BeatAnimationSequence(enemyActor.transform)
+                new TransformBeatAnimation(enemyActor.transform)
                     .LookTo(MathF.PI, 20)
                     .WaitFor(5)
                     .LookTo(0, 20));

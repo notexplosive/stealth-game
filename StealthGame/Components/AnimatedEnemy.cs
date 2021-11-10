@@ -6,24 +6,24 @@ namespace StealthGame.Components
 {
     public class AnimatedEnemy : BaseComponent, IEnemyBehavior
     {
-        private readonly BeatAnimationSequence beatAnimationSequence;
+        private readonly TransformBeatAnimation transformBeatAnimation;
 
-        public AnimatedEnemy(Actor actor, BeatAnimationSequence beatAnimationSequence) : base(actor)
+        public AnimatedEnemy(Actor actor, TransformBeatAnimation transformBeatAnimation) : base(actor)
         {
-            this.beatAnimationSequence = beatAnimationSequence;
+            this.transformBeatAnimation = transformBeatAnimation;
         }
 
         public override void Update(float dt)
         {
-            this.beatAnimationSequence.UpdateTween(dt);
+            this.transformBeatAnimation.UpdateTween(dt);
         }
 
         public void OnBeat(int currentBeat)
         {
-            var state = this.beatAnimationSequence.StateAt(currentBeat);
-            this.beatAnimationSequence.ApplyToActor(state);
+            var state = this.transformBeatAnimation.StateAt(currentBeat);
+            this.transformBeatAnimation.ApplyToActor(state);
         }
 
-        public int TotalBeats => this.beatAnimationSequence.TotalLength;
+        public int TotalBeats => this.transformBeatAnimation.TotalLength;
     }
 }

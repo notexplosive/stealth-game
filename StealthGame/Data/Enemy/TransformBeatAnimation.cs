@@ -9,7 +9,7 @@ using MonoGame.Extended;
 
 namespace StealthGame.Data.Enemy
 {
-    public class BeatAnimationSequence
+    public class TransformBeatAnimation
     {
         private List<TransformState> states = new List<TransformState>();
         private readonly TransformState startingState;
@@ -22,7 +22,7 @@ namespace StealthGame.Data.Enemy
         private readonly TweenAccessors<float> tweenableAngle;
         private TransformState previousTargetState;
 
-        public BeatAnimationSequence(Transform transform)
+        public TransformBeatAnimation(Transform transform)
         {
             this.transform = transform;
             this.startingState = new TransformState(transform.Position, transform.Angle);
@@ -42,7 +42,7 @@ namespace StealthGame.Data.Enemy
             return this.states.Count == 0 ? this.startingState : this.states[^1];
         }
 
-        public BeatAnimationSequence LookTo(float destinationAngle, int beatCount)
+        public TransformBeatAnimation LookTo(float destinationAngle, int beatCount)
         {
             var startingAngle = LatestState().angle;
             var angleDisplacement = destinationAngle - startingAngle;
@@ -95,7 +95,7 @@ namespace StealthGame.Data.Enemy
             this.previousTargetState = state;
         }
 
-        public BeatAnimationSequence WaitFor(int beats)
+        public TransformBeatAnimation WaitFor(int beats)
         {
             for (int i = 0; i < beats; i++)
             {
