@@ -1,3 +1,4 @@
+using System;
 using Machina.Components;
 using Machina.Data;
 using Machina.Engine;
@@ -11,12 +12,12 @@ namespace StealthGame.Components
     public class AnimatedEnemy : BaseComponent, IEnemyBehavior
     {
         private readonly TransformBeatAnimation transformBeatAnimation;
-        
+
         private TransformState previousTargetState;
-        
+
         private readonly TweenChain positionTween = new TweenChain();
         private readonly TweenAccessors<Vector2> tweenablePosition;
-        
+
         private readonly TweenChain angleTween = new TweenChain();
         private readonly TweenAccessors<float> tweenableAngle;
 
@@ -44,20 +45,29 @@ namespace StealthGame.Components
 
         private void ApplyToActor(TransformState state)
         {
-            if (state.position != previousTargetState.position)
+            this.angleTween.Clear();
+            this.positionTween.Clear();
+            
+            if (state.position != this.previousTargetState.position)
             {
                 this.positionTween.AppendVectorTween(state.position, BeatTracker.SecondsPerBeat,
                     EaseFuncs.Linear,
                     this.tweenablePosition);
             }
-            
-            if (state.angle != previousTargetState.angle)
+
+            if (state.Angle != this.previousTargetState.Angle)
             {
-                this.positionTween.AppendFloatTween(state.angle, BeatTracker.SecondsPerBeat,
+                this.angleTween.AppendFloatTween(state.Angle, BeatTracker.SecondsPerBeat,
                     EaseFuncs.Linear,
                     this.tweenableAngle);
+
+                if (state.WasForceModified)
+                {
+                    this.angleTween.SkipToEnd();
+                    transform.Angle = state.Angle;
+                }
             }
-            
+
             this.previousTargetState = state;
         }
 

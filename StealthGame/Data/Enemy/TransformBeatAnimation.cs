@@ -13,7 +13,6 @@ namespace StealthGame.Data.Enemy
     {
         private List<TransformState> states = new List<TransformState>();
         public readonly TransformState startingState;
-        
 
         public TransformBeatAnimation(TransformState startingState)
         {
@@ -29,12 +28,19 @@ namespace StealthGame.Data.Enemy
 
         public TransformBeatAnimation LookTo(float destinationAngle, int beatCount)
         {
-            var startingAngle = LatestState().angle;
+            var startingAngle = LatestState().Angle;
             var angleDisplacement = destinationAngle - startingAngle;
             var angleIncrement = angleDisplacement / beatCount;
-            for (int i = 0; i < beatCount; i++)
+            for (int i = 1; i < beatCount; i++)
             {
                 AddAngleState(startingAngle + angleIncrement * i);
+            }
+            
+            AddAngleState(destinationAngle);
+
+            if (destinationAngle == MathF.PI * 2)
+            {
+                ForceSetAngle(0f);
             }
 
             return this;
@@ -62,6 +68,36 @@ namespace StealthGame.Data.Enemy
                 this.states.Add(LatestState());
             }
 
+            return this;
+        }
+
+        public TransformBeatAnimation MoveTo(Vector2 target)
+        {
+            var start = LatestState().position;
+            var displacement = target - start;
+            var direction = displacement.NormalizedCopy() * PathBuilder.PixelsPerStep;
+            var currentPoint = start;
+            var directionLength = direction.Length();
+
+            while ((currentPoint - target).Length() > directionLength)
+            {
+                currentPoint += direction;
+                AddPositionState(currentPoint);
+            }
+            
+            AddPositionState(target);
+            
+            return this;
+        }
+
+        private void AddPositionState(Vector2 position)
+        {
+            this.states.Add(new TransformState(position, LatestState().Angle));
+        }
+
+        public TransformBeatAnimation ForceSetAngle(float f)
+        {
+            LatestState().ForceSetAngle(f);
             return this;
         }
     }

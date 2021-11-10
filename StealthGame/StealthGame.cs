@@ -61,26 +61,30 @@ namespace StealthGame
                     .AddOff(5)
             );
 
-            CameraEnemy(gameScene, player, walls, worldBeatTracker,
-                enemyDetections,
+            MovingEnemy(gameScene, player, walls, worldBeatTracker, enemyDetections,
                 new TransformBeatAnimation(new TransformState(new Vector2(1200, 100), 0))
                     .LookTo(MathF.PI, 20)
+                    .MoveTo(new Vector2(800,100))
                     .WaitFor(5)
-                    .LookTo(0, 20));
+                    .LookTo(MathF.PI * 2, 20)
+                    .MoveTo(new Vector2(1200,100))
+            );
+
 
             var path = gameScene.AddActor("Path");
             new PathRenderer(path, walkingPath, enemyDetections);
         }
 
-        private static void CameraEnemy(Scene gameScene, Actor player, Wall[] walls,
+        private static void MovingEnemy(Scene gameScene, Actor player, Wall[] walls,
             BeatTracker worldBeatTracker, List<EnemyDetection> enemyDetections, TransformBeatAnimation animation)
         {
             var enemyActor = gameScene.AddActor("enemy", animation.startingState.position);
             new LineOfSight(enemyActor, player.transform, walls);
-            new FacingDirection(enemyActor, animation.startingState.angle);
+            new FacingDirection(enemyActor, animation.startingState.Angle);
             new ConeOfVision(enemyActor, MathF.PI / 2);
             var enemy = new AnimatedEnemy(enemyActor, animation);
             worldBeatTracker.RegisterBehavior(enemy);
+
             enemyDetections.Add(new EnemyDetection(enemyActor));
         }
 
