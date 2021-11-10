@@ -1,5 +1,6 @@
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
+using System.Transactions;
+using Machina.Engine;
 using StealthGame.Components;
 
 namespace StealthGame.Data.Enemy
@@ -14,7 +15,7 @@ namespace StealthGame.Data.Enemy
             this.cone = cone;
             this.sequence = sequence.GetContent();
         }
-        
+
         public void OnBeat(int currentBeat)
         {
             var isOpen = this.sequence[currentBeat % TotalBeats];
@@ -38,17 +39,17 @@ namespace StealthGame.Data.Enemy
 
             public Sequence AddOn(int beats)
             {
-                for (int i = 0; i < beats; i++)
+                for (var i = 0; i < beats; i++)
                 {
                     this.content.Add(true);
                 }
 
                 return this;
             }
-            
+
             public Sequence AddOff(int beats)
             {
-                for (int i = 0; i < beats; i++)
+                for (var i = 0; i < beats; i++)
                 {
                     this.content.Add(false);
                 }

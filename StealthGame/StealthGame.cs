@@ -63,11 +63,18 @@ namespace StealthGame
                     .AddOff(5)
             );
 
-            CreateBlinkingEnemy(gameScene, new Vector2(250, 250), 0, player, walls, worldBeatTracker, enemyDetections,
-                new Blink.Sequence()
-                    .AddOn(25)
-                    .AddOff(5)
-            );
+            var cameraAngle = 0f;
+            var cameraPosition = new Vector2(1200, 100);
+            var enemyActor = gameScene.AddActor("enemy", cameraPosition);
+            new LineOfSight(enemyActor, player.transform, walls);
+            new FacingDirection(enemyActor, cameraAngle);
+            new ConeOfVision(enemyActor, MathF.PI / 2);
+            new EnemyBehavior(enemyActor, worldBeatTracker, new CameraPanning(
+                new BeatAnimationSequence(enemyActor.transform)
+                    .LookTo(MathF.PI, 20)
+                    .LookTo(0, 20)
+            ));
+            enemyDetections.Add(new EnemyDetection(enemyActor));
 
             var path = gameScene.AddActor("Path");
             new PathRenderer(path, walkingPath, enemyDetections);

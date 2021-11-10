@@ -12,7 +12,7 @@ namespace StealthGame.Components
     {
         private readonly float visionWidth;
         private readonly FacingDirection facingDirection;
-        private bool isActive;
+        private bool isActive = true;
 
         public ConeOfVision(Actor actor, float visionWidth) : base(actor)
         {
