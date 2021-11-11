@@ -48,17 +48,21 @@ namespace StealthGame.Data
 
         public Transform PlayerTransform => this.player.transform;
 
-        public Actor CreatePlayer(WalkingPath path)
+        public void CreatePlayer(PathBuilder pathBuilder)
         {
+            var path = pathBuilder.Build();
             var playerBeatTracker = new BeatTracker(false);
 
             var player = this.scene.AddActor("Player");
             new PlayerInput(player, playerBeatTracker);
             new PlayerMovement(player, playerBeatTracker, path);
             new CircleRenderer(player, 32, Color.Orange);
+            new Editable<EditorScene>(player, this.editMode, (editor) =>
+            {
+                editor.AddPlayerPath(pathBuilder);
+            });
 
             this.player = player;
-            return player;
         }
 
         public void CreateWall(Rectangle rectangle)
@@ -106,10 +110,10 @@ namespace StealthGame.Data
             return enemyActor;
         }
 
-        public void CreatePath(WalkingPath walkingPath)
+        public void CreatePath(PathBuilder pathBuilder)
         {
             var path = this.scene.AddActor("Path");
-            new PathRenderer(path, walkingPath, this.enemyDetections);
+            new PathRenderer(path, pathBuilder.Build(), this.enemyDetections);
         }
     }
 }

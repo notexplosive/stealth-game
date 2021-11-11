@@ -40,5 +40,13 @@ namespace StealthGame.Data
                 game.CreateWall(boundingRect.Rect);
             });
         }
+
+        public void AddPlayerPath(PathBuilder path)
+        {
+            foreach (var node in path.Instructions())
+            {
+                
+            }
+        }
     }
 }

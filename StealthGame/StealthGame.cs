@@ -26,9 +26,9 @@ namespace StealthGame
                     .AddStraightLine(new Vector2(1400, 200))
                 ;
 
-            var walkingPath = playerPathBuilder.Build();
 
-            var player = gameScene.CreatePlayer(walkingPath);
+            gameScene.CreatePlayer(playerPathBuilder);
+            gameScene.CreatePath(playerPathBuilder);
 
             gameScene.CreateWall(new Rectangle(600, 400, 100, 100));
             gameScene.CreateWall(new Rectangle(700, 500, 100, 100));
@@ -50,7 +50,6 @@ namespace StealthGame
                     .MoveTo(new Vector2(1200, 100))
             );
 
-            gameScene.CreatePath(walkingPath);
         }
 
         protected override void PrepareDynamicAssets(AssetLoadTree tree)

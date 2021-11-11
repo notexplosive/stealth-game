@@ -8,7 +8,6 @@ namespace StealthGame.Components
     public class Editable<TScene> : BaseComponent where TScene : IScene
     {
         private readonly EditModeToggle<TScene> editMode;
-        private EditorHandle editorHandle;
         private readonly Action<TScene> callback;
 
         public Editable(Actor actor, EditModeToggle<TScene> editMode, Action<TScene> callback) : base(actor)

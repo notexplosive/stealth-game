@@ -1,54 +1,47 @@
+using System.Collections;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using MonoGame.Extended;
 
 namespace StealthGame.Data
 {
     public class PathBuilder
     {
-        private readonly List<PathPoint> builtPath = new List<PathPoint>();
+        private readonly List<IPathInstruction> instructions = new List<IPathInstruction>();
         public const float PixelsPerStep = 20f;
-        public Vector2 CurrentPoint => this.builtPath[^1].position;
+        private Vector2 CurrentPoint => this.instructions[^1].EndPosition;
 
         public PathBuilder(Vector2 start)
         {
-            this.builtPath.Add(new VectorPathPoint(start));
+            this.instructions.Add(new WaitInstruction(start,0));
         }
         
         public PathBuilder AddStraightLine(Vector2 end)
         {
-            var start = this.builtPath[^1].position;
-            var displacement = end - start;
-            var direction = displacement.NormalizedCopy() * PixelsPerStep;
-            var currentPoint = start;
-            var directionLength = direction.Length();
-
-            while ((currentPoint - end).Length() > directionLength)
-            {
-                currentPoint += direction;
-                this.builtPath.Add(new VectorPathPoint(currentPoint));
-            }
-            
+            this.instructions.Add(new StraightLineInstruction(CurrentPoint, end));
             return this;
         }
 
         public WalkingPath Build()
         {
-            return new WalkingPath(this.builtPath);
+            var builtPath = new List<PathPoint>();
+            foreach (var instruction in Instructions())
+            {
+                builtPath.AddRange(instruction.Build());
+            }
+
+            return new WalkingPath(builtPath);
         }
 
         public PathBuilder AddWaitPoint(int waitTimeBeats)
         {
-            this.builtPath.Add(new StartWaitPathPoint(CurrentPoint, waitTimeBeats));
-
-            for (int i = 0; i < waitTimeBeats; i++)
-            {
-                this.builtPath.Add(new VectorPathPoint(CurrentPoint));
-            }
-            
-            this.builtPath.Add(new EndWaitPathPoint(CurrentPoint));
+            this.instructions.Add(new WaitInstruction(CurrentPoint, waitTimeBeats));
             
             return this;
+        }
+
+        public IPathInstruction[] Instructions()
+        {
+            return this.instructions.ToArray();
         }
     }
 }
