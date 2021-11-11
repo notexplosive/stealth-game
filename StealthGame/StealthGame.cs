@@ -35,23 +35,20 @@ namespace StealthGame
 
             var player = gameScene.CreatePlayer(walkingPath);
 
-            var walls = new Wall[]
-            {
-                gameScene.CreateWall(new Rectangle(600, 400, 100, 100)),
-                gameScene.CreateWall(new Rectangle(700, 500, 100, 100)),
-                gameScene.CreateWall(new Rectangle(800, 600, 100, 100))
-            };
+            gameScene.CreateWall(new Rectangle(600, 400, 100, 100));
+            gameScene.CreateWall(new Rectangle(700, 500, 100, 100));
+            gameScene.CreateWall(new Rectangle(800, 600, 100, 100));
 
             var enemyDetections = new List<EnemyDetection>();
 
-            gameScene.CreateBlinkingEnemy(new Vector2(850, 450), MathF.PI / 2, player, walls,
+            gameScene.CreateBlinkingEnemy(new Vector2(850, 450), MathF.PI / 2, player,
                 enemyDetections,
                 new Blink.Sequence()
                     .AddOn(20)
                     .AddOff(5)
             );
 
-            gameScene.CreateMovingEnemy(player, walls, enemyDetections,
+            gameScene.CreateMovingEnemy(player, enemyDetections,
                 new TransformBeatAnimation(new TransformState(new Vector2(1200, 100), 0))
                     .LookTo(MathF.PI, 20)
                     .MoveTo(new Vector2(800, 100))

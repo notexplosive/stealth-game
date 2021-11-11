@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Machina.Data;
 using Microsoft.Xna.Framework;
@@ -30,9 +31,9 @@ namespace StealthGame.Data
             }
         }
 
-        public void ApplyWallCollisions(Wall[] walls)
+        public void ApplyWallCollisions(Func<IList<Wall>> getWalls)
         {
-            foreach(var wall in walls)
+            foreach(var wall in getWalls())
             {
                 ApplyWallCollision(wall);
             }
@@ -40,8 +41,8 @@ namespace StealthGame.Data
 
         private void ApplyWallCollision(Wall wall)
         {
-            var collidePoints = new LineSegment(this.start, this.destination).GetCollidePoints(wall.Rectangle());
-            foreach (var collidePoint in collidePoints)
+            var newCollidePoints = new LineSegment(this.start, this.destination).GetCollidePoints(wall.Rectangle());
+            foreach (var collidePoint in newCollidePoints)
             {
                 AddCollidePoint(collidePoint);
             }
