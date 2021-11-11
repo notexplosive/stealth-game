@@ -31,17 +31,14 @@ namespace StealthGame.Data
 
             new BoundingRectFill(this.editActor, new Color(Color.Cyan, 0.5f));
             new Hoverable(this.editActor);
-            var clickable = new Clickable(this.editActor);
-            new Draggable(this.editActor);
+            new Clickable(this.editActor);
+            var draggable = new Draggable(this.editActor);
             new MoveOnDrag(this.editActor);
             new EditorHandleComponent(this.editActor, this.actor);
 
-            clickable.OnClick += (button) =>
+            draggable.DragStart += (vec1, vec2) =>
             {
-                if (button == MouseButton.Left)
-                {
-                    editorScene.Select(this);
-                }
+                editorScene.Select(this);
             };
         }
 

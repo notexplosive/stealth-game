@@ -19,8 +19,6 @@ namespace StealthGame
         {
         }
 
-        public static EditorScene CurrentEditor { get; set; }
-
         protected override void OnGameLoad()
         {
             var gameScene = new GameScene(SceneLayers);
@@ -55,28 +53,6 @@ namespace StealthGame
 
             var startingState = new TransformState(new Vector2(1200, 100), 0);
             gameScene.CreateMovingEnemy(new TransformBeatAnimation(builder, startingState));
-            
-            SceneLayers.AddDebugApp(
-                new App("EditorWindow", true, new WindowBuilder(new Point(400,400))
-                    .Title("Editor")
-                    .OnLaunch((win) =>
-                    {
-                        var root = win.scene.AddActor("EditorWindowRoot");
-                        new BoundingRect(root, Point.Zero);
-                        new BoundingRectToViewportSize(root);
-                        var group = new LayoutGroup(root, Orientation.Vertical);
-
-                        group.AddHorizontallyStretchedElement("Title", 24, actor =>
-                        {
-                            new BoundedTextRenderer(actor, "", Assets.GetSpriteFont("DefaultFont"));
-                            new EditorInfo(actor);
-                            new EditorTitle(actor);
-                        });
-                    })
-                    .AllowKeyboardEvents()
-                    .DestroyViaCloseButton()
-                    .CanBeResized()
-                ));
         }
 
         protected override void PrepareDynamicAssets(AssetLoadTree tree)

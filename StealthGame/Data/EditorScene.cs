@@ -1,5 +1,6 @@
 using System.Collections.Immutable;
 using Machina.Components;
+using Machina.Data;
 using Machina.Engine;
 using Microsoft.Xna.Framework;
 using StealthGame.Components;
@@ -19,7 +20,6 @@ namespace StealthGame.Data
         public EditorScene(SceneLayers sceneLayers)
         {
             this.sceneLayers = sceneLayers;
-            StealthGame.CurrentEditor = this;
         }
         
         public void SwitchTo(Scene originalScene)
@@ -33,11 +33,41 @@ namespace StealthGame.Data
             
             var world = this.scene.AddActor("World");
             this.playMode = new EditModeToggle<GameScene>(world, new GameScene(this.sceneLayers));
+            
+            
+            var app = new App("EditorWindow", true, new WindowBuilder(new Point(800,400))
+                .Title("Editor")
+                .OnLaunch((win) =>
+                {
+                    CreateWindowContents(win.scene);
+                })
+                .StartingPosition(new Vector2(100,500))
+                .AllowKeyboardEvents()
+                .CanBeResized()
+            );
+
+            var manager = new WindowManager(MachinaGame.defaultStyle, new Depth(400));
+            app.Open(this.scene, manager);
+        }
+
+        private void CreateWindowContents(Scene windowScene)
+        {
+            var root = windowScene.AddActor("EditorWindowRoot");
+            new BoundingRect(root, Point.Zero);
+            new BoundingRectToViewportSize(root);
+            var group = new LayoutGroup(root, Orientation.Vertical);
+
+            group.AddHorizontallyStretchedElement("Title", 24, actor =>
+            {
+                new BoundedTextRenderer(actor, "", MachinaGame.Assets.GetSpriteFont("DefaultFont"));
+                new EditorInfo(actor, this);
+                new EditorTitle(actor);
+            });
         }
 
         public void AddWall(Rectangle rectangle)
         {
-            var wallActor = this.scene.AddActor("enemy", rectangle.Location.ToVector2());
+            var wallActor = this.scene.AddActor("Wall", rectangle.Location.ToVector2());
             var boundingRect = new BoundingRect(wallActor, rectangle.Size);
             new BoundingRectFill(wallActor, Color.Orange);
             CreateEditorHandle(wallActor);
@@ -58,8 +88,7 @@ namespace StealthGame.Data
             var prevPosition = path.startPosition;
             foreach (var instruction in path.Instructions())
             {
-                var currentNode = root.transform.AddActorAsChild("Node", prevPosition);
-
+                var currentNode = root.transform.AddActorAsChild("PathNode:"+instruction.ToString(), prevPosition);
                 CreateEditorHandle(currentNode);
                 new PathInstructionWrapper(currentNode, instruction);
                 prevPosition = instruction.EndPosition;
@@ -91,7 +120,7 @@ namespace StealthGame.Data
 
         public void AddBlinkingEnemy(TransformState state, Blink.Sequence sequence)
         {
-            var root = this.scene.AddActor("EnemyRoot", state.position, state.Angle);
+            var root = this.scene.AddActor("Blinking Enemy", state.position, state.Angle);
 
             CreateEditorHandle(root);
             new Editable<GameScene>(root, this.playMode, (game) =>
@@ -122,7 +151,7 @@ namespace StealthGame.Data
             
             foreach (var instruction in animation.originalBuilder.instructions)
             {
-                var node = root.transform.AddActorAsChild("PathNode", instruction.EndState(currentState).position);
+                var node = root.transform.AddActorAsChild("PathNode: " + instruction, instruction.EndState(currentState).position);
                 node.transform.Angle = instruction.EndState(currentState).Angle;
 
                 if (!(instruction is ForceSetAngleInstruction || instruction is LookToInstruction || instruction is WaitForInstruction))
