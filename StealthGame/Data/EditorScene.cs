@@ -99,12 +99,18 @@ namespace StealthGame.Data
             var currentState = animation.startingState;
 
             var startNode = root.transform.AddActorAsChild("startNode", currentState.position);
+            new EditorHandle(startNode);
             
             foreach (var instruction in animation.originalBuilder.instructions)
             {
                 var node = root.transform.AddActorAsChild("PathNode", instruction.EndState(currentState).position);
                 node.transform.Angle = instruction.EndState(currentState).Angle;
-                new EditorHandle(node);
+
+                if (!(instruction is ForceSetAngleInstruction || instruction is LookToInstruction || instruction is WaitForInstruction))
+                {
+                    new EditorHandle(node);
+                }
+
                 new AnimationInstructionWrapper(node, instruction);
 
                 currentState = instruction.EndState(currentState);
