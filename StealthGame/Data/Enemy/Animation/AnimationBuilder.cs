@@ -43,9 +43,11 @@ namespace StealthGame.Data.Enemy.Animation
 
         public List<TransformState> Build(TransformState startingState)
         {
+            var instructionsCopy = new List<IAnimationBuilderInstruction>(this.instructions);
+            instructionsCopy.Add(new MoveToInstruction(startingState.position));
             var currentState = startingState;
             var fullList = new List<TransformState>();
-            foreach (var instruction in this.instructions)
+            foreach (var instruction in instructionsCopy)
             {
                 fullList.AddRange(instruction.Build(currentState));
                 currentState = fullList[^1];

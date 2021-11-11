@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using Machina.Components;
 using Machina.Engine;
 using Microsoft.Xna.Framework;
@@ -52,7 +53,7 @@ namespace StealthGame.Data
             {
                 var currentNode = root.transform.AddActorAsChild("Node", prevPosition);
                 new EditorHandle(currentNode);
-                new InstructionWrapper(currentNode, instruction);
+                new PathInstructionWrapper(currentNode, instruction);
                 prevPosition = instruction.EndPosition;
             }
 
@@ -66,7 +67,7 @@ namespace StealthGame.Data
                         root.transform.HasChildAt(i + 1) ? 
                             root.transform.ChildAt(i+ 1).transform.Position 
                             : new Vector2();
-                    var instruction = child.GetComponent<InstructionWrapper>().Rebuild(nextPosition);
+                    var instruction = child.GetComponent<PathInstructionWrapper>().Rebuild(nextPosition);
                     
                     if (pathBuilder == null)
                     {
@@ -95,21 +96,34 @@ namespace StealthGame.Data
         public void AddMovingEnemy(TransformBeatAnimation animation)
         {
             var root = this.scene.AddActor("EnemyPathRoot");
-            var newBuilder = animation.originalBuilder;
             var currentState = animation.startingState;
 
+            var startNode = root.transform.AddActorAsChild("startNode", currentState.position);
+            
             foreach (var instruction in animation.originalBuilder.instructions)
             {
-                var node = root.transform.AddActorAsChild("PathNode", currentState.position);
-                node.transform.Angle = currentState.Angle;
+                var node = root.transform.AddActorAsChild("PathNode", instruction.EndState(currentState).position);
+                node.transform.Angle = instruction.EndState(currentState).Angle;
                 new EditorHandle(node);
+                new AnimationInstructionWrapper(node, instruction);
 
                 currentState = instruction.EndState(currentState);
             }
 
             new Editable<GameScene>(root, this.playMode, (game) =>
             {
-                var newStartingState = animation.startingState; // todo; should be dynamicly obtained
+                var newBuilder = new AnimationBuilder();
+                var newStartingState = new TransformState(root.transform.ChildAt(0).transform);
+                var pos = newStartingState;
+                
+                for (int i = 1; i < root.transform.ChildCount; i++)
+                {
+                    var child = root.transform.ChildAt(i);
+                    var instruction = child.GetComponent<AnimationInstructionWrapper>().Rebuild(pos);
+                    newBuilder.AddInstruction(instruction);
+                    pos = instruction.EndState(pos);
+                }
+                
                 game.CreateMovingEnemy(new TransformBeatAnimation(newBuilder, newStartingState));
             });
         }

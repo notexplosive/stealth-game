@@ -1,3 +1,4 @@
+using Machina.Components;
 using Microsoft.Xna.Framework;
 
 namespace StealthGame.Data.Enemy
@@ -14,11 +15,16 @@ namespace StealthGame.Data.Enemy
             Angle = angle;
         }
 
+        public TransformState(Transform transform)
+        {
+            this.position = transform.Position;
+            Angle = transform.Angle;
+        }
+
         public void ForceSetAngle(float angle)
         {
             Angle = angle;
             WasForceModified = true;
         }
-
     }
 }

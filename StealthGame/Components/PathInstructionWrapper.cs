@@ -7,11 +7,11 @@ using StealthGame.Data.PlayerPath;
 
 namespace StealthGame.Components
 {
-    public class InstructionWrapper : BaseComponent
+    public class PathInstructionWrapper : BaseComponent
     {
         private readonly IPathInstruction originalInstruction;
 
-        public InstructionWrapper(Actor actor, IPathInstruction originalInstruction) : base(actor)
+        public PathInstructionWrapper(Actor actor, IPathInstruction originalInstruction) : base(actor)
         {
             this.originalInstruction = originalInstruction;
         }
