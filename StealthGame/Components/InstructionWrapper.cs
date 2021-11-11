@@ -3,6 +3,7 @@ using Machina.Components;
 using Machina.Engine;
 using Microsoft.Xna.Framework;
 using StealthGame.Data;
+using StealthGame.Data.PlayerPath;
 
 namespace StealthGame.Components
 {

@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using StealthGame.Data;
+using StealthGame.Data.PlayerPath;
 
 namespace StealthGame.Components
 {

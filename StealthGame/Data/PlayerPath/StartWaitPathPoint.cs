@@ -1,6 +1,6 @@
 using Microsoft.Xna.Framework;
 
-namespace StealthGame.Data
+namespace StealthGame.Data.PlayerPath
 {
     public class StartWaitPathPoint : PathPoint
     {

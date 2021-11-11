@@ -1,9 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
-using Machina.Engine;
 using Microsoft.Xna.Framework;
 
-namespace StealthGame.Data
+namespace StealthGame.Data.PlayerPath
 {
     public class PathBuilder
     {

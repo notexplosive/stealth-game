@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using MonoGame.Extended;
 
-namespace StealthGame.Data
+namespace StealthGame.Data.PlayerPath
 {
     public class StraightLineInstruction : IPathInstruction
     {
