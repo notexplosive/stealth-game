@@ -19,7 +19,7 @@ namespace StealthGame.Data.Enemy.Animation
             var states = new List<TransformState>();
             var start = latestState.position;
             var displacement = this.destinationPosition - start;
-            var direction = displacement.NormalizedCopy() * PathBuilder.PixelsPerStep;
+            var direction = displacement.NormalizedCopy() * PlayerPathBuilder.PixelsPerStep;
             var currentPoint = start;
             var directionLength = direction.Length();
 

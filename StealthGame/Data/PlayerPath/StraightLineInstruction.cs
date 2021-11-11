@@ -18,7 +18,7 @@ namespace StealthGame.Data.PlayerPath
         public List<PathPoint> Build(Vector2 start)
         {
             var displacement = this.end - start;
-            var direction = displacement.NormalizedCopy() * PathBuilder.PixelsPerStep;
+            var direction = displacement.NormalizedCopy() * PlayerPathBuilder.PixelsPerStep;
             var currentPoint = start;
             var directionLength = direction.Length();
 

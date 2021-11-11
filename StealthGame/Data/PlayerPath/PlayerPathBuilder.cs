@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 
 namespace StealthGame.Data.PlayerPath
 {
-    public class PathBuilder
+    public class PlayerPathBuilder
     {
         private readonly List<IPathInstruction> instructions = new List<IPathInstruction>();
         public readonly Vector2 startPosition;
@@ -22,12 +22,12 @@ namespace StealthGame.Data.PlayerPath
             }
         }
 
-        public PathBuilder(Vector2 start)
+        public PlayerPathBuilder(Vector2 start)
         {
             this.startPosition = start;
         }
         
-        public PathBuilder AddStraightLine(Vector2 end)
+        public PlayerPathBuilder AddStraightLine(Vector2 end)
         {
             this.instructions.Add(new StraightLineInstruction(end));
             return this;
@@ -46,7 +46,7 @@ namespace StealthGame.Data.PlayerPath
             return new WalkingPath(builtPath);
         }
 
-        public PathBuilder AddWaitPoint(int waitTimeBeats)
+        public PlayerPathBuilder AddWaitPoint(int waitTimeBeats)
         {
             this.instructions.Add(new WaitInstruction(CurrentPoint, waitTimeBeats));
             return this;
@@ -62,7 +62,7 @@ namespace StealthGame.Data.PlayerPath
             this.instructions.Add(instruction);
         }
 
-        public PathBuilder AddWinPoint()
+        public PlayerPathBuilder AddWinPoint()
         {
             this.instructions.Add(new WinInstruction(CurrentPoint));
             return this;

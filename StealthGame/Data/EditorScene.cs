@@ -82,11 +82,11 @@ namespace StealthGame.Data
             new EditorHandle(wallActor, this);
         }
 
-        public void AddPlayerPath(PathBuilder path)
+        public void AddPlayerPath(PlayerPathBuilder playerPath)
         {
             var root = this.scene.AddActor("PathRoot");
-            var prevPosition = path.startPosition;
-            foreach (var instruction in path.Instructions())
+            var prevPosition = playerPath.startPosition;
+            foreach (var instruction in playerPath.Instructions())
             {
                 var currentNode = root.transform.AddActorAsChild("PathNode:"+instruction.ToString(), prevPosition);
                 CreateEditorHandle(currentNode);
@@ -96,7 +96,7 @@ namespace StealthGame.Data
 
             new Editable<GameScene>(root, this.playMode, (game) =>
             {
-                PathBuilder pathBuilder = null;
+                PlayerPathBuilder playerPathBuilder = null;
                 for (int i = 0; i < root.transform.ChildCount; i++)
                 {
                     var child = root.transform.ChildAt(i);
@@ -106,15 +106,15 @@ namespace StealthGame.Data
                             : new Vector2();
                     var instruction = child.GetComponent<PathInstructionWrapper>().Rebuild(nextPosition);
                     
-                    if (pathBuilder == null)
+                    if (playerPathBuilder == null)
                     {
                         // initialize PathBuilder on first iteration
-                        pathBuilder = new PathBuilder(path.startPosition);
+                        playerPathBuilder = new PlayerPathBuilder(playerPath.startPosition);
                     }
                     
-                    pathBuilder.AddInstruction(instruction);
+                    playerPathBuilder.AddInstruction(instruction);
                 }
-                game.CreatePlayer(pathBuilder);
+                game.CreatePlayer(playerPathBuilder);
             });
         }
 

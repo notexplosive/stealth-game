@@ -50,18 +50,18 @@ namespace StealthGame.Data
 
         public Transform PlayerTransform => this.player.transform;
 
-        public void CreatePlayer(PathBuilder pathBuilder)
+        public void CreatePlayer(PlayerPathBuilder playerPathBuilder)
         {
-            var path = pathBuilder.Build();
+            var path = playerPathBuilder.Build();
             var playerBeatTracker = new BeatTracker(false);
 
             this.player = this.scene.AddActor("Player");
             new PlayerInput(this.player, playerBeatTracker);
             new PlayerMovement(this.player, playerBeatTracker, path);
             new CircleRenderer(this.player, 32, Color.Orange);
-            new Editable<EditorScene>(this.player, this.editMode, (editor) => { editor.AddPlayerPath(pathBuilder); });
+            new Editable<EditorScene>(this.player, this.editMode, (editor) => { editor.AddPlayerPath(playerPathBuilder); });
 
-            CreatePath(pathBuilder);
+            CreatePath(playerPathBuilder);
         }
 
         public void CreateWall(Rectangle rectangle)
@@ -110,10 +110,10 @@ namespace StealthGame.Data
             });
         }
 
-        public void CreatePath(PathBuilder pathBuilder)
+        public void CreatePath(PlayerPathBuilder playerPathBuilder)
         {
             var path = this.scene.AddActor("Path");
-            new PathRenderer(path, pathBuilder.Build(), this.enemyDetections);
+            new PathRenderer(path, playerPathBuilder.Build(), this.enemyDetections);
         }
     }
 }

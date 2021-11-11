@@ -11,7 +11,7 @@ namespace StealthGame.Data.Enemy.Animation
         public TransformBeatAnimation(AnimationBuilder originalBuilder, TransformState startingState)
         {
             this.startingState = startingState;
-            this.states = originalBuilder.Build(startingState);
+            this.states = originalBuilder.GetAllStates(startingState);
             this.originalBuilder = originalBuilder;
         }
 

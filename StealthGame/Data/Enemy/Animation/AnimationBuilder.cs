@@ -41,10 +41,11 @@ namespace StealthGame.Data.Enemy.Animation
             return this;
         }
 
-        public List<TransformState> Build(TransformState startingState)
+        public List<TransformState> GetAllStates(TransformState startingState)
         {
             var instructionsCopy = new List<IAnimationBuilderInstruction>(this.instructions);
             instructionsCopy.Add(new MoveToInstruction(startingState.position));
+            instructionsCopy.Add(new ForceSetAngleInstruction(startingState.Angle));
             var currentState = startingState;
             var fullList = new List<TransformState>();
             foreach (var instruction in instructionsCopy)
