@@ -45,8 +45,8 @@ namespace StealthGame.Data
             var wallActor = this.scene.AddActor("enemy", rectangle.Location.ToVector2());
             new BoundingRect(wallActor, rectangle.Size);
             new BoundingRectFill(wallActor, Color.Orange);
-            new Editable(wallActor);
             new Wall(wallActor, this.wallList);
+            new Editable(wallActor, this.editMode);
 
             return wallActor;
         }
@@ -62,11 +62,10 @@ namespace StealthGame.Data
             new LineOfSight(enemyActor, player.transform, GetWalls);
             new FacingDirection(enemyActor, angle);
             var cone = new ConeOfVision(enemyActor, MathF.PI / 2);
-            this.worldBeatTracker.RegisterBehavior(new Blink(
-                cone,
-                blinkSequence
-            ));
+            var enemy = new Blink(cone, blinkSequence);
+            this.worldBeatTracker.RegisterBehavior(enemy);
             new EnemyDetection(enemyActor, this.enemyDetections);
+            new Editable(enemyActor, this.editMode);
         }
 
         public void CreateMovingEnemy(Actor player, TransformBeatAnimation animation)
@@ -77,8 +76,8 @@ namespace StealthGame.Data
             new ConeOfVision(enemyActor, MathF.PI / 2);
             var enemy = new AnimatedEnemy(enemyActor, animation);
             this.worldBeatTracker.RegisterBehavior(enemy);
-
             new EnemyDetection(enemyActor, this.enemyDetections);
+            new Editable(enemyActor, this.editMode);
         }
 
         public void CreatePath(WalkingPath walkingPath)

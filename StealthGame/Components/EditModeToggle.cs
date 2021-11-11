@@ -8,19 +8,20 @@ namespace StealthGame.Components
 {
     public class EditModeToggle : BaseComponent
     {
-        private bool isEditModeEnabled;
+        public bool isEditModeEnabled { private set; get; }
         public event Action<bool> EditModeToggled;
-        
+
         public EditModeToggle(Actor actor) : base(actor)
         {
         }
 
         public override void OnKey(Keys key, ButtonState state, ModifierKeys modifiers)
         {
-            if (key == Keys.E && modifiers.Control)
+            if (key == Keys.E && modifiers.Control && state == ButtonState.Pressed)
             {
-                this.isEditModeEnabled = !this.isEditModeEnabled;
-                EditModeToggled?.Invoke(this.isEditModeEnabled);
+                isEditModeEnabled = !isEditModeEnabled;
+                EditModeToggled?.Invoke(isEditModeEnabled);
+                MachinaGame.Print("Edit mode:",this.isEditModeEnabled);
             }
         }
     }

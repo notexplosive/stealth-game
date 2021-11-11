@@ -1,13 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using Machina.Components;
 using Machina.Engine;
 using Machina.Engine.AssetLibrary;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using MonoGame.Extended;
-using StealthGame.Components;
 using StealthGame.Data;
 using StealthGame.Data.Enemy;
 
