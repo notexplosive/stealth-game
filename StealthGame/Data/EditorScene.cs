@@ -96,7 +96,18 @@ namespace StealthGame.Data
 
         public void AddMovingEnemy(TransformBeatAnimation animation)
         {
-            var root = this.scene.AddActor("EnemyPathRoot");
+            var root = CreateAnimationEditor(animation);
+
+            new Editable<GameScene>(root, this.playMode, (game) =>
+            {
+                game.CreateMovingEnemy(CreateAnimation(root));
+            });
+        }
+
+        private Actor CreateAnimationEditor(TransformBeatAnimation animation)
+        {
+            var root = this.scene.AddActor("AnimationRoot");
+
             var currentState = animation.startingState;
 
             var startNode = root.transform.AddActorAsChild("startNode", currentState.position);
@@ -116,23 +127,25 @@ namespace StealthGame.Data
 
                 currentState = instruction.EndState(currentState);
             }
+            
+            return root;
+        }
 
-            new Editable<GameScene>(root, this.playMode, (game) =>
+        private TransformBeatAnimation CreateAnimation(Actor root)
+        {
+            var newBuilder = new AnimationBuilder();
+            var newStartingState = new TransformState(root.transform.ChildAt(0).transform);
+            var pos = newStartingState;
+                
+            for (int i = 1; i < root.transform.ChildCount; i++)
             {
-                var newBuilder = new AnimationBuilder();
-                var newStartingState = new TransformState(root.transform.ChildAt(0).transform);
-                var pos = newStartingState;
-                
-                for (int i = 1; i < root.transform.ChildCount; i++)
-                {
-                    var child = root.transform.ChildAt(i);
-                    var instruction = child.GetComponent<AnimationInstructionWrapper>().Rebuild(pos);
-                    newBuilder.AddInstruction(instruction);
-                    pos = instruction.EndState(pos);
-                }
-                
-                game.CreateMovingEnemy(new TransformBeatAnimation(newBuilder, newStartingState));
-            });
+                var child = root.transform.ChildAt(i);
+                var instruction = child.GetComponent<AnimationInstructionWrapper>().Rebuild(pos);
+                newBuilder.AddInstruction(instruction);
+                pos = instruction.EndState(pos);
+            }
+
+            return new TransformBeatAnimation(newBuilder, newStartingState);
         }
     }
 }
