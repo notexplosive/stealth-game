@@ -15,6 +15,7 @@ namespace StealthGame.Data
         private readonly BeatTracker worldBeatTracker;
         private readonly List<Wall> wallList = new List<Wall>();
         private readonly List<EnemyDetection> enemyDetections = new List<EnemyDetection>();
+        private Actor player;
 
         public GameScene(Scene scene)
         {
@@ -31,6 +32,8 @@ namespace StealthGame.Data
             this.editMode.EditModeToggled += worldBeat.OnEditModeToggled;
         }
 
+        public Transform PlayerTransform => this.player.transform;
+
         public Actor CreatePlayer(WalkingPath path)
         {
             var playerBeatTracker = new BeatTracker(false);
@@ -40,6 +43,7 @@ namespace StealthGame.Data
             new PlayerMovement(player, playerBeatTracker, path);
             new CircleRenderer(player, 32, Color.Orange);
 
+            this.player = player;
             return player;
         }
 
@@ -59,28 +63,32 @@ namespace StealthGame.Data
             return this.wallList;
         }
 
-        public void CreateBlinkingEnemy(Vector2 position, float angle, Actor player, Blink.Sequence blinkSequence)
+        public Actor CreateBlinkingEnemy(Vector2 position, float angle, Blink.Sequence blinkSequence)
         {
             var enemyActor = this.scene.AddActor("enemy", position);
-            new LineOfSight(enemyActor, player.transform, GetWalls);
+            new LineOfSight(enemyActor, this, GetWalls);
             new FacingDirection(enemyActor, angle);
             var cone = new ConeOfVision(enemyActor, MathF.PI / 2);
             var enemy = new Blink(cone, blinkSequence);
             this.worldBeatTracker.RegisterBehavior(enemy);
             new EnemyDetection(enemyActor, this.enemyDetections);
             new Editable(enemyActor, this.editMode);
+
+            return enemyActor;
         }
 
-        public void CreateMovingEnemy(Actor player, TransformBeatAnimation animation)
+        public Actor CreateMovingEnemy(TransformBeatAnimation animation)
         {
             var enemyActor = this.scene.AddActor("enemy", animation.startingState.position);
-            new LineOfSight(enemyActor, player.transform, GetWalls);
+            new LineOfSight(enemyActor, this, GetWalls);
             new FacingDirection(enemyActor, animation.startingState.Angle);
             new ConeOfVision(enemyActor, MathF.PI / 2);
             var enemy = new AnimatedEnemy(enemyActor, animation);
             this.worldBeatTracker.RegisterBehavior(enemy);
             new EnemyDetection(enemyActor, this.enemyDetections);
             new Editable(enemyActor, this.editMode);
+
+            return enemyActor;
         }
 
         public void CreatePath(WalkingPath walkingPath)

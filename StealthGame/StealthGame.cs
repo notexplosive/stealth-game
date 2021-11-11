@@ -33,13 +33,13 @@ namespace StealthGame
             gameScene.CreateWall(new Rectangle(700, 500, 100, 100));
             gameScene.CreateWall(new Rectangle(800, 600, 100, 100));
             
-            gameScene.CreateBlinkingEnemy(new Vector2(850, 450), MathF.PI / 2, player,
+            gameScene.CreateBlinkingEnemy(new Vector2(850, 450), MathF.PI / 2,
                 new Blink.Sequence()
                     .AddOn(20)
                     .AddOff(5)
             );
 
-            gameScene.CreateMovingEnemy(player,
+            gameScene.CreateMovingEnemy(
                 new TransformBeatAnimation(new TransformState(new Vector2(1200, 100), 0))
                     .LookTo(MathF.PI, 20)
                     .MoveTo(new Vector2(800, 100))

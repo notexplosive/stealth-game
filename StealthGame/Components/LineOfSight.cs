@@ -13,9 +13,9 @@ namespace StealthGame.Components
         private readonly Transform playerTransform;
         private readonly Func<IList<Wall>> getWalls;
 
-        public LineOfSight(Actor actor, Transform playerTransform, Func<IList<Wall>> getWalls) : base(actor)
+        public LineOfSight(Actor actor, GameScene gameScene, Func<IList<Wall>> getWalls) : base(actor)
         {
-            this.playerTransform = playerTransform;
+            this.playerTransform = gameScene.PlayerTransform;
             this.getWalls = getWalls;
         }
 
