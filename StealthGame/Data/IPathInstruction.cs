@@ -5,8 +5,7 @@ namespace StealthGame.Data
 {
     public interface IPathInstruction
     {
-        public List<PathPoint> Build();
+        public List<PathPoint> Build(Vector2 start);
         public Vector2 EndPosition { get; }
-        public Vector2 StartPosition { get; }
     }
 }

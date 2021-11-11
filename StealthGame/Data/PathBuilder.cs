@@ -8,7 +8,7 @@ namespace StealthGame.Data
     public class PathBuilder
     {
         private readonly List<IPathInstruction> instructions = new List<IPathInstruction>();
-        private readonly Vector2 startPosition;
+        public readonly Vector2 startPosition;
         public const float PixelsPerStep = 20f;
 
         private Vector2 CurrentPoint
@@ -31,16 +31,18 @@ namespace StealthGame.Data
         
         public PathBuilder AddStraightLine(Vector2 end)
         {
-            this.instructions.Add(new StraightLineInstruction(CurrentPoint, end));
+            this.instructions.Add(new StraightLineInstruction(end));
             return this;
         }
 
         public WalkingPath Build()
         {
             var builtPath = new List<PathPoint>();
-            foreach (var instruction in Instructions())
+            var previousEndPos = this.startPosition;
+            foreach (var instruction in this.instructions)
             {
-                builtPath.AddRange(instruction.Build());
+                builtPath.AddRange(instruction.Build(previousEndPos));
+                previousEndPos = instruction.EndPosition;
             }
 
             return new WalkingPath(builtPath);
@@ -59,8 +61,13 @@ namespace StealthGame.Data
 
         public void AddInstruction(IPathInstruction instruction)
         {
-            MachinaGame.Print(instruction);
             this.instructions.Add(instruction);
+        }
+
+        public PathBuilder AddWinPoint()
+        {
+            this.instructions.Add(new WinInstruction(CurrentPoint));
+            return this;
         }
     }
 }

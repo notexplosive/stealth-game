@@ -1,16 +1,38 @@
+using System;
 using Machina.Components;
 using Machina.Engine;
+using Microsoft.Xna.Framework;
 using StealthGame.Data;
 
 namespace StealthGame.Components
 {
     public class InstructionWrapper : BaseComponent
     {
-        public readonly IPathInstruction instruction;
+        private readonly IPathInstruction originalInstruction;
 
-        public InstructionWrapper(Actor actor, IPathInstruction instruction) : base(actor)
+        public InstructionWrapper(Actor actor, IPathInstruction originalInstruction) : base(actor)
         {
-            this.instruction = instruction;
+            this.originalInstruction = originalInstruction;
+        }
+
+        public IPathInstruction Rebuild(Vector2 nextPosition)
+        {
+            if (this.originalInstruction is StraightLineInstruction)
+            {
+                return new StraightLineInstruction(nextPosition);
+            }
+
+            if (this.originalInstruction is WaitInstruction wait)
+            {
+                return new WaitInstruction(transform.Position, wait.waitTimeBeats);
+            }
+
+            if (this.originalInstruction is WinInstruction)
+            {
+                return new WinInstruction(transform.Position);
+            }
+
+            throw new InvalidCastException();
         }
     }
 }

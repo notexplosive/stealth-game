@@ -24,9 +24,9 @@ namespace StealthGame
                     .AddStraightLine(new Vector2(900, 800))
                     .AddWaitPoint(20)
                     .AddStraightLine(new Vector2(1400, 200))
+                    .AddWinPoint()
                 ;
-
-
+            
             gameScene.CreatePlayer(playerPathBuilder);
 
             gameScene.CreateWall(new Rectangle(600, 400, 100, 100));

@@ -6,23 +6,20 @@ namespace StealthGame.Data
 {
     public class StraightLineInstruction : IPathInstruction
     {
-        private readonly Vector2 start;
         private readonly Vector2 end;
         
         public Vector2 EndPosition => this.end;
-        public Vector2 StartPosition => this.start;
 
-        public StraightLineInstruction(Vector2 start, Vector2 end)
+        public StraightLineInstruction(Vector2 end)
         {
-            this.start = start;
             this.end = end;
         }
         
-        public List<PathPoint> Build()
+        public List<PathPoint> Build(Vector2 start)
         {
-            var displacement = this.end - this.start;
+            var displacement = this.end - start;
             var direction = displacement.NormalizedCopy() * PathBuilder.PixelsPerStep;
-            var currentPoint = this.start;
+            var currentPoint = start;
             var directionLength = direction.Length();
 
             var builtPath = new List<PathPoint>();
