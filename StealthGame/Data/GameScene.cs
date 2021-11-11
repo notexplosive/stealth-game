@@ -24,8 +24,11 @@ namespace StealthGame.Data
             this.worldBeatTracker.LoopHit += () => { MachinaGame.Print("Loop!"); };
             
             var world = scene.AddActor("World");
-            new WorldBeat(world, this.worldBeatTracker);
+            var worldBeat = new AdvanceWorldBeat(world, this.worldBeatTracker);
+
             this.editMode = new EditModeToggle(world);
+
+            this.editMode.EditModeToggled += worldBeat.OnEditModeToggled;
         }
 
         public Actor CreatePlayer(WalkingPath path)
