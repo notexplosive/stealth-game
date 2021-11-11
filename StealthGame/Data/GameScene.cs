@@ -93,7 +93,7 @@ namespace StealthGame.Data
             return enemyActor;
         }
 
-        public Actor CreateMovingEnemy(TransformBeatAnimation animation)
+        public void CreateMovingEnemy(TransformBeatAnimation animation)
         {
             var enemyActor = this.scene.AddActor("enemy", animation.startingState.position);
             new LineOfSight(enemyActor, this, GetWalls);
@@ -102,9 +102,10 @@ namespace StealthGame.Data
             var enemy = new AnimatedEnemy(enemyActor, animation);
             this.worldBeatTracker.RegisterBehavior(enemy);
             new EnemyDetection(enemyActor, this.enemyDetections);
-            new Editable<EditorScene>(enemyActor, this.editMode, (editor) => { });
-
-            return enemyActor;
+            new Editable<EditorScene>(enemyActor, this.editMode, (editor) =>
+            {
+                editor.AddMovingEnemy(animation);
+            });
         }
 
         public void CreatePath(PathBuilder pathBuilder)

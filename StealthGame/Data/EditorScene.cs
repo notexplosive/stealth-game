@@ -89,5 +89,17 @@ namespace StealthGame.Data
                     sequence);
             });
         }
+
+        public void AddMovingEnemy(TransformBeatAnimation animation)
+        {
+            var root = this.scene.AddActor("EnemyPathRoot");
+
+            new Editable<GameScene>(root, this.playMode, (game) =>
+            {
+                var newAnimation = animation; // todo
+                
+                game.CreateMovingEnemy(newAnimation);
+            });
+        }
     }
 }
