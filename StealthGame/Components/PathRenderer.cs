@@ -14,7 +14,7 @@ namespace StealthGame.Components
     public class PathRenderer : BaseComponent
     {
         private readonly WalkingPath walkingPath;
-        private float currentTime;
+        private float currentBeat;
         private readonly Dictionary<Vector2,PathPoint> nodesToRender;
         private readonly List<EnemyDetection> enemies;
 
@@ -43,9 +43,9 @@ namespace StealthGame.Components
 
         public override void Update(float dt)
         {
-            this.currentTime += dt;
+            this.currentBeat += BeatTracker.Seconds2Beats(dt);
 
-            this.currentTime %= this.walkingPath.TotalBeats();
+            this.currentBeat %= this.walkingPath.TotalBeats();
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -53,10 +53,9 @@ namespace StealthGame.Components
             var beatIndex = 0;
             foreach (var renderedNode in this.nodesToRender.Values)
             {
-                var timeAtIndex = BeatTracker.Beat2Seconds(beatIndex);
-                var durationOfWholePath = this.walkingPath.TotalBeats();
+                var beatDurationOfWholePath = this.walkingPath.TotalBeats();
 
-                float[] ghostIncrements = new float[] { 0f, durationOfWholePath / 4, durationOfWholePath / 2, durationOfWholePath * 3 / 4 };
+                float[] ghostIncrements = new float[] { 0f, beatDurationOfWholePath / 4, beatDurationOfWholePath / 2, beatDurationOfWholePath * 3 / 4 };
 
                 var highlight = false;
                 var isWithinCone = false;
@@ -68,9 +67,8 @@ namespace StealthGame.Components
 
                 foreach (var ghostIncrement in ghostIncrements)
                 {
-                    var alongTime = (this.currentTime + ghostIncrement) % durationOfWholePath;
-                    var beat = (int) BeatTracker.Seconds2Beats(alongTime);
-                    var positionAtBeat = this.walkingPath.PathNodeAtBeat(beat).position;
+                    int alongBeat = ((int) (this.currentBeat + ghostIncrement)) % beatDurationOfWholePath;
+                    var positionAtBeat = this.walkingPath.PathNodeAtBeat(alongBeat).position;
 
                     highlight = highlight || (positionAtBeat == renderedNode.position);
                 }

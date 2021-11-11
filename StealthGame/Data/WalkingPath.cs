@@ -29,9 +29,9 @@ namespace StealthGame.Data
             return this.path[beatIndex];
         }
 
-        public float TotalBeats()
+        public int TotalBeats()
         {
-            return this.path.Length * BeatTracker.SecondsPerBeat;
+            return this.path.Length;
         }
     }
 }
