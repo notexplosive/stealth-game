@@ -76,16 +76,19 @@ namespace StealthGame.Data
             return this.wallList;
         }
 
-        public Actor CreateBlinkingEnemy(Vector2 position, float angle, Blink.Sequence blinkSequence)
+        public Actor CreateBlinkingEnemy(TransformState state, Blink.Sequence blinkSequence)
         {
-            var enemyActor = this.scene.AddActor("enemy", position);
+            var enemyActor = this.scene.AddActor("enemy", state.position);
             new LineOfSight(enemyActor, this, GetWalls);
-            new FacingDirection(enemyActor, angle);
+            new FacingDirection(enemyActor, state.Angle);
             var cone = new ConeOfVision(enemyActor, MathF.PI / 2);
             var enemy = new Blink(cone, blinkSequence);
             this.worldBeatTracker.RegisterBehavior(enemy);
             new EnemyDetection(enemyActor, this.enemyDetections);
-            new Editable<EditorScene>(enemyActor, this.editMode, (editor) => { });
+            new Editable<EditorScene>(enemyActor, this.editMode, (editor) =>
+            {
+                editor.AddBlinkingEnemy(state, blinkSequence);
+            });
 
             return enemyActor;
         }

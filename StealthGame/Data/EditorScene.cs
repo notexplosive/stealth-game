@@ -2,6 +2,7 @@ using Machina.Components;
 using Machina.Engine;
 using Microsoft.Xna.Framework;
 using StealthGame.Components;
+using StealthGame.Data.Enemy;
 
 namespace StealthGame.Data
 {
@@ -74,6 +75,18 @@ namespace StealthGame.Data
                     pathBuilder.AddInstruction(instruction);
                 }
                 game.CreatePlayer(pathBuilder);
+            });
+        }
+
+        public void AddBlinkingEnemy(TransformState state, Blink.Sequence sequence)
+        {
+            var root = this.scene.AddActor("EnemyRoot", state.position, state.Angle);
+
+            new EditorHandle(root);
+            new Editable<GameScene>(root, this.playMode, (game) =>
+            {
+                game.CreateBlinkingEnemy(new TransformState(root.transform.Position, root.transform.Angle),
+                    sequence);
             });
         }
     }
