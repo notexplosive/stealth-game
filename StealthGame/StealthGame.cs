@@ -4,6 +4,7 @@ using Machina.Engine.AssetLibrary;
 using Microsoft.Xna.Framework;
 using StealthGame.Data;
 using StealthGame.Data.Enemy;
+using StealthGame.Data.Enemy.Animation;
 using StealthGame.Data.PlayerPath;
 
 namespace StealthGame

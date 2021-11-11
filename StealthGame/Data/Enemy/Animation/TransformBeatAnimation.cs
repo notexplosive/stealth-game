@@ -1,14 +1,9 @@
-using System;
 using System.Collections.Generic;
-using System.Net.NetworkInformation;
-using Machina.Components;
-using Machina.Data;
-using Machina.ThirdParty;
 using Microsoft.Xna.Framework;
 using MonoGame.Extended;
 using StealthGame.Data.PlayerPath;
 
-namespace StealthGame.Data.Enemy
+namespace StealthGame.Data.Enemy.Animation
 {
     public class TransformBeatAnimation
     {

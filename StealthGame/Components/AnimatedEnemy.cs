@@ -6,6 +6,7 @@ using Machina.ThirdParty;
 using Microsoft.Xna.Framework;
 using StealthGame.Data;
 using StealthGame.Data.Enemy;
+using StealthGame.Data.Enemy.Animation;
 
 namespace StealthGame.Components
 {
