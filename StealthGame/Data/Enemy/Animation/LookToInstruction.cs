@@ -27,5 +27,10 @@ namespace StealthGame.Data.Enemy.Animation
             states.Add(new TransformState(latestState.position, this.destinationAngle));
             return states;
         }
+
+        public TransformState EndState(TransformState prevState)
+        {
+            return new TransformState(prevState.position, this.destinationAngle);
+        }
     }
 }

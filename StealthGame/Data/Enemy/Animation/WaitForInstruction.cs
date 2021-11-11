@@ -21,5 +21,10 @@ namespace StealthGame.Data.Enemy.Animation
 
             return states;
         }
+
+        public TransformState EndState(TransformState prevState)
+        {
+            return prevState;
+        }
     }
 }

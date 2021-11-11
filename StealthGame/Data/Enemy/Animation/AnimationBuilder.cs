@@ -5,7 +5,7 @@ namespace StealthGame.Data.Enemy.Animation
 {
     public class AnimationBuilder
     {
-        private List<IAnimationBuilderInstruction> instructions = new List<IAnimationBuilderInstruction>();
+        public readonly List<IAnimationBuilderInstruction> instructions = new List<IAnimationBuilderInstruction>();
 
         public AnimationBuilder()
         {

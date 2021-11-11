@@ -17,5 +17,7 @@ namespace StealthGame.Data.Enemy.Animation
 
             return new List<TransformState>(); // empty list on purpose
         }
+
+        public TransformState EndState(TransformState prevState) => new TransformState(prevState.position, this.angle);
     }
 }
