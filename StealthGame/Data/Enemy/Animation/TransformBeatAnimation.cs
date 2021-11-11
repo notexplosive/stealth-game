@@ -6,11 +6,13 @@ namespace StealthGame.Data.Enemy.Animation
     {
         private readonly List<TransformState> states;
         public readonly TransformState startingState;
+        public readonly AnimationBuilder originalBuilder;
 
         public TransformBeatAnimation(AnimationBuilder originalBuilder, TransformState startingState)
         {
             this.startingState = startingState;
             this.states = originalBuilder.Build(startingState);
+            this.originalBuilder = originalBuilder;
         }
 
         public int TotalLength => this.states.Count;

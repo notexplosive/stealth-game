@@ -95,12 +95,12 @@ namespace StealthGame.Data
         public void AddMovingEnemy(TransformBeatAnimation animation)
         {
             var root = this.scene.AddActor("EnemyPathRoot");
+            var newBuilder = animation.originalBuilder; // todo;
 
             new Editable<GameScene>(root, this.playMode, (game) =>
             {
-                var newAnimation = animation; // todo
-                
-                game.CreateMovingEnemy(newAnimation);
+                var newStartingState = animation.startingState; // todo; should be dynamicly obtained
+                game.CreateMovingEnemy(new TransformBeatAnimation(newBuilder, newStartingState));
             });
         }
     }
