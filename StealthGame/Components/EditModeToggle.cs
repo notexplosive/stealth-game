@@ -3,25 +3,26 @@ using Machina.Components;
 using Machina.Data;
 using Machina.Engine;
 using Microsoft.Xna.Framework.Input;
+using StealthGame.Data;
 
 namespace StealthGame.Components
 {
     public class EditModeToggle : BaseComponent
     {
-        public bool isEditModeEnabled { private set; get; }
-        public event Action<bool> EditModeToggled;
+        private readonly IScene editorScene;
+        public event Action<IScene> EditModeToggled;
 
-        public EditModeToggle(Actor actor) : base(actor)
+        public EditModeToggle(Actor actor, IScene scene) : base(actor)
         {
+            this.editorScene = scene;
         }
 
         public override void OnKey(Keys key, ButtonState state, ModifierKeys modifiers)
         {
             if (key == Keys.E && modifiers.Control && state == ButtonState.Pressed)
             {
-                isEditModeEnabled = !isEditModeEnabled;
-                EditModeToggled?.Invoke(isEditModeEnabled);
-                MachinaGame.Print("Edit mode:",this.isEditModeEnabled);
+                this.editorScene.SwitchTo(this.actor.scene);
+                EditModeToggled?.Invoke(this.editorScene);
             }
         }
     }

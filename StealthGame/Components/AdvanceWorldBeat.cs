@@ -37,18 +37,6 @@ namespace StealthGame.Components
             this.shiftIsDown = modifiers.Shift;
         }
 
-        public void OnEditModeToggled(bool on)
-        {
-            if (on)
-            {
-                Pause();
-            }
-            else
-            {
-                Play();
-            }
-        }
-
         private void Pause()
         {
             this.isPaused = true;

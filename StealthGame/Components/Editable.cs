@@ -1,3 +1,4 @@
+using System;
 using Machina.Components;
 using Machina.Engine;
 using StealthGame.Data;
@@ -8,12 +9,13 @@ namespace StealthGame.Components
     {
         private readonly EditModeToggle editMode;
         private EditorHandle editorHandle;
+        private readonly Action<IScene> callback;
 
-        public Editable(Actor actor, EditModeToggle editMode) : base(actor)
+        public Editable(Actor actor, EditModeToggle editMode, Action<IScene> callback) : base(actor)
         {
             this.editMode = editMode;
-            OnToggleEditMode(editMode.isEditModeEnabled);
-            
+            this.callback = callback;
+
             this.editMode.EditModeToggled += OnToggleEditMode;
         }
 
@@ -22,17 +24,9 @@ namespace StealthGame.Components
             this.editMode.EditModeToggled -= OnToggleEditMode;
         }
 
-        private void OnToggleEditMode(bool on)
+        private void OnToggleEditMode(IScene editorScene)
         {
-            if (on)
-            {
-                this.editorHandle = new EditorHandle(this.actor);
-            }
-            else
-            {
-                this.editorHandle?.Destroy();
-                this.editorHandle = null;
-            }
+            callback(editorScene);
         }
     }
 }

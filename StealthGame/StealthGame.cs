@@ -16,7 +16,8 @@ namespace StealthGame
 
         protected override void OnGameLoad()
         {
-            var gameScene = new GameScene(SceneLayers.AddNewScene());
+            var gameScene = new GameScene(SceneLayers);
+            gameScene.SwitchTo(null);
 
             var playerPathBuilder = new PathBuilder(new Vector2(200, 200))
                     .AddStraightLine(new Vector2(900, 400))
