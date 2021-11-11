@@ -14,10 +14,12 @@ namespace StealthGame.Data
         private readonly SceneLayers sceneLayers;
         private Scene scene;
         private EditModeToggle<GameScene> playMode;
+        public EditorHandle selected;
 
         public EditorScene(SceneLayers sceneLayers)
         {
             this.sceneLayers = sceneLayers;
+            StealthGame.CurrentEditor = this;
         }
         
         public void SwitchTo(Scene originalScene)
@@ -38,11 +40,16 @@ namespace StealthGame.Data
             var wallActor = this.scene.AddActor("enemy", rectangle.Location.ToVector2());
             var boundingRect = new BoundingRect(wallActor, rectangle.Size);
             new BoundingRectFill(wallActor, Color.Orange);
-            new EditorHandle(wallActor);
+            CreateEditorHandle(wallActor);
             new Editable<GameScene>(wallActor, this.playMode, (game) =>
             {
                 game.CreateWall(boundingRect.Rect);
             });
+        }
+
+        private void CreateEditorHandle(Actor wallActor)
+        {
+            new EditorHandle(wallActor, this);
         }
 
         public void AddPlayerPath(PathBuilder path)
@@ -53,7 +60,7 @@ namespace StealthGame.Data
             {
                 var currentNode = root.transform.AddActorAsChild("Node", prevPosition);
 
-                new EditorHandle(currentNode);
+                CreateEditorHandle(currentNode);
                 new PathInstructionWrapper(currentNode, instruction);
                 prevPosition = instruction.EndPosition;
             }
@@ -86,7 +93,7 @@ namespace StealthGame.Data
         {
             var root = this.scene.AddActor("EnemyRoot", state.position, state.Angle);
 
-            new EditorHandle(root);
+            CreateEditorHandle(root);
             new Editable<GameScene>(root, this.playMode, (game) =>
             {
                 game.CreateBlinkingEnemy(new TransformState(root.transform.Position, root.transform.Angle),
@@ -111,7 +118,7 @@ namespace StealthGame.Data
             var currentState = animation.startingState;
 
             var startNode = root.transform.AddActorAsChild("startNode", currentState.position);
-            new EditorHandle(startNode);
+            CreateEditorHandle(startNode);
             
             foreach (var instruction in animation.originalBuilder.instructions)
             {
@@ -120,7 +127,7 @@ namespace StealthGame.Data
 
                 if (!(instruction is ForceSetAngleInstruction || instruction is LookToInstruction || instruction is WaitForInstruction))
                 {
-                    new EditorHandle(node);
+                    CreateEditorHandle(node);
                 }
 
                 new AnimationInstructionWrapper(node, instruction);
@@ -146,6 +153,11 @@ namespace StealthGame.Data
             }
 
             return new TransformBeatAnimation(newBuilder, newStartingState);
+        }
+
+        public void Select(EditorHandle editorHandle)
+        {
+            this.selected = editorHandle;
         }
     }
 }
