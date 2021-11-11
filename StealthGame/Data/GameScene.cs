@@ -61,18 +61,16 @@ namespace StealthGame.Data
             return player;
         }
 
-        public Actor CreateWall(Rectangle rectangle)
+        public void CreateWall(Rectangle rectangle)
         {
             var wallActor = this.scene.AddActor("enemy", rectangle.Location.ToVector2());
-            new BoundingRect(wallActor, rectangle.Size);
+            var boundingRect = new BoundingRect(wallActor, rectangle.Size);
             new BoundingRectFill(wallActor, Color.Orange);
             new Wall(wallActor, this.wallList);
             new Editable<EditorScene>(wallActor, this.editMode, (editor) =>
             {
-                (editor as EditorScene).AddWall(rectangle);
+                editor.AddWall(boundingRect.Rect);
             });
-
-            return wallActor;
         }
 
         private IList<Wall> GetWalls()

@@ -32,12 +32,12 @@ namespace StealthGame.Data
         public void AddWall(Rectangle rectangle)
         {
             var wallActor = this.scene.AddActor("enemy", rectangle.Location.ToVector2());
-            new BoundingRect(wallActor, rectangle.Size);
+            var boundingRect = new BoundingRect(wallActor, rectangle.Size);
             new BoundingRectFill(wallActor, Color.Orange);
             new EditorHandle(wallActor);
             new Editable<GameScene>(wallActor, this.playMode, (game) =>
             {
-                game.CreateWall(rectangle);
+                game.CreateWall(boundingRect.Rect);
             });
         }
     }
