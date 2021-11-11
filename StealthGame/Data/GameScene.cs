@@ -12,7 +12,7 @@ namespace StealthGame.Data
     {
         void SwitchTo(Scene originalScene);
     }
-    
+
     public class GameScene : IScene
     {
         private readonly SceneLayers sceneLayers;
@@ -39,8 +39,8 @@ namespace StealthGame.Data
 
             this.worldBeatTracker = new BeatTracker(true);
             this.worldBeatTracker.LoopHit += () => { MachinaGame.Print("Loop!"); };
-            
-            var world = scene.AddActor("World");
+
+            var world = this.scene.AddActor("World");
             new AdvanceWorldBeat(world, this.worldBeatTracker);
 
             this.editMode = new EditModeToggle<EditorScene>(world, new EditorScene(this.sceneLayers));
@@ -53,16 +53,13 @@ namespace StealthGame.Data
             var path = pathBuilder.Build();
             var playerBeatTracker = new BeatTracker(false);
 
-            var player = this.scene.AddActor("Player");
-            new PlayerInput(player, playerBeatTracker);
-            new PlayerMovement(player, playerBeatTracker, path);
-            new CircleRenderer(player, 32, Color.Orange);
-            new Editable<EditorScene>(player, this.editMode, (editor) =>
-            {
-                editor.AddPlayerPath(pathBuilder);
-            });
+            this.player = this.scene.AddActor("Player");
+            new PlayerInput(this.player, playerBeatTracker);
+            new PlayerMovement(this.player, playerBeatTracker, path);
+            new CircleRenderer(this.player, 32, Color.Orange);
+            new Editable<EditorScene>(this.player, this.editMode, (editor) => { editor.AddPlayerPath(pathBuilder); });
 
-            this.player = player;
+            CreatePath(pathBuilder);
         }
 
         public void CreateWall(Rectangle rectangle)
@@ -71,10 +68,7 @@ namespace StealthGame.Data
             var boundingRect = new BoundingRect(wallActor, rectangle.Size);
             new BoundingRectFill(wallActor, Color.Orange);
             new Wall(wallActor, this.wallList);
-            new Editable<EditorScene>(wallActor, this.editMode, (editor) =>
-            {
-                editor.AddWall(boundingRect.Rect);
-            });
+            new Editable<EditorScene>(wallActor, this.editMode, (editor) => { editor.AddWall(boundingRect.Rect); });
         }
 
         private IList<Wall> GetWalls()
@@ -91,7 +85,7 @@ namespace StealthGame.Data
             var enemy = new Blink(cone, blinkSequence);
             this.worldBeatTracker.RegisterBehavior(enemy);
             new EnemyDetection(enemyActor, this.enemyDetections);
-            new Editable<EditorScene>(enemyActor, this.editMode, (editor)=>{});
+            new Editable<EditorScene>(enemyActor, this.editMode, (editor) => { });
 
             return enemyActor;
         }
@@ -105,7 +99,7 @@ namespace StealthGame.Data
             var enemy = new AnimatedEnemy(enemyActor, animation);
             this.worldBeatTracker.RegisterBehavior(enemy);
             new EnemyDetection(enemyActor, this.enemyDetections);
-            new Editable<EditorScene>(enemyActor, this.editMode, (editor)=>{});
+            new Editable<EditorScene>(enemyActor, this.editMode, (editor) => { });
 
             return enemyActor;
         }

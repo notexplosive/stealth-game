@@ -10,6 +10,7 @@ namespace StealthGame.Data
         private readonly Vector2 end;
         
         public Vector2 EndPosition => this.end;
+        public Vector2 StartPosition => this.start;
 
         public StraightLineInstruction(Vector2 start, Vector2 end)
         {

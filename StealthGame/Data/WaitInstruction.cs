@@ -37,5 +37,6 @@ namespace StealthGame.Data
         }
 
         public Vector2 EndPosition => this.start;
+        public Vector2 StartPosition => this.start;
     }
 }

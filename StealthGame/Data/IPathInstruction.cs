@@ -7,5 +7,6 @@ namespace StealthGame.Data
     {
         public List<PathPoint> Build();
         public Vector2 EndPosition { get; }
+        public Vector2 StartPosition { get; }
     }
 }

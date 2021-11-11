@@ -28,7 +28,6 @@ namespace StealthGame
 
 
             gameScene.CreatePlayer(playerPathBuilder);
-            gameScene.CreatePath(playerPathBuilder);
 
             gameScene.CreateWall(new Rectangle(600, 400, 100, 100));
             gameScene.CreateWall(new Rectangle(700, 500, 100, 100));

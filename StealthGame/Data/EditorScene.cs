@@ -43,10 +43,30 @@ namespace StealthGame.Data
 
         public void AddPlayerPath(PathBuilder path)
         {
-            foreach (var node in path.Instructions())
+            var root = this.scene.AddActor("PathRoot");
+            foreach (var instruction in path.Instructions())
             {
-                
+                var currentNode = root.transform.AddActorAsChild("Node", instruction.StartPosition);
+                new EditorHandle(currentNode);
+                new InstructionWrapper(currentNode, instruction);
             }
+
+            new Editable<GameScene>(root, this.playMode, (game) =>
+            {
+                PathBuilder pathBuilder = null;
+                for (int i = 0; i < root.transform.ChildCount; i++)
+                {
+                    var child = root.transform.ChildAt(i);
+                    var instruction = child.GetComponent<InstructionWrapper>().instruction;
+                    if (pathBuilder == null)
+                    {
+                        pathBuilder = new PathBuilder(instruction.StartPosition);
+                    }
+                    
+                    pathBuilder.AddInstruction(instruction);
+                }
+                game.CreatePlayer(pathBuilder);
+            });
         }
     }
 }
