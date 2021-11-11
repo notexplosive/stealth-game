@@ -50,7 +50,7 @@ namespace StealthGame
                 .MoveTo(new Vector2(1200, 100));
 
             var startingState = new TransformState(new Vector2(1200, 100), 0);
-            gameScene.CreateMovingEnemy(builder.Build(startingState));
+            gameScene.CreateMovingEnemy(new TransformBeatAnimation(builder, startingState));
 
         }
 

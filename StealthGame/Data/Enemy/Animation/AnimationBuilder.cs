@@ -41,7 +41,7 @@ namespace StealthGame.Data.Enemy.Animation
             return this;
         }
 
-        public TransformBeatAnimation Build(TransformState startingState)
+        public List<TransformState> Build(TransformState startingState)
         {
             var currentState = startingState;
             var fullList = new List<TransformState>();
@@ -51,7 +51,7 @@ namespace StealthGame.Data.Enemy.Animation
                 currentState = fullList[^1];
             }
 
-            return new TransformBeatAnimation(fullList);
+            return fullList;
         }
     }
 }
