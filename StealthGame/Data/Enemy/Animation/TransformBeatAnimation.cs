@@ -1,18 +1,16 @@
 using System.Collections.Generic;
-using Microsoft.Xna.Framework;
-using MonoGame.Extended;
-using StealthGame.Data.PlayerPath;
 
 namespace StealthGame.Data.Enemy.Animation
 {
     public class TransformBeatAnimation
     {
-        private List<TransformState> states = new List<TransformState>();
+        private readonly List<TransformState> states;
         public readonly TransformState startingState;
 
-        public TransformBeatAnimation(TransformState startingState)
+        public TransformBeatAnimation(List<TransformState> states)
         {
-            this.startingState = startingState;
+            this.states = states;
+            this.startingState = states[0];
         }
 
         public int TotalLength => this.states.Count;
@@ -20,26 +18,6 @@ namespace StealthGame.Data.Enemy.Animation
         private TransformState LatestState()
         {
             return this.states.Count == 0 ? this.startingState : this.states[^1];
-        }
-
-        public TransformBeatAnimation LookTo(float destinationAngle, int beatCount)
-        {
-            var startingAngle = LatestState().Angle;
-            var angleDisplacement = destinationAngle - startingAngle;
-            var angleIncrement = angleDisplacement / beatCount;
-            for (int i = 1; i < beatCount; i++)
-            {
-                AddAngleState(startingAngle + angleIncrement * i);
-            }
-            
-            AddAngleState(destinationAngle);
-
-            return this;
-        }
-
-        private void AddAngleState(float angle)
-        {
-            this.states.Add(new TransformState(LatestState().position, angle));
         }
 
         public TransformState StateAt(int currentBeat)
@@ -50,46 +28,6 @@ namespace StealthGame.Data.Enemy.Animation
             }
 
             return this.states[currentBeat % TotalLength];
-        }
-
-        public TransformBeatAnimation WaitFor(int beats)
-        {
-            for (int i = 0; i < beats; i++)
-            {
-                this.states.Add(LatestState());
-            }
-
-            return this;
-        }
-
-        public TransformBeatAnimation MoveTo(Vector2 target)
-        {
-            var start = LatestState().position;
-            var displacement = target - start;
-            var direction = displacement.NormalizedCopy() * PathBuilder.PixelsPerStep;
-            var currentPoint = start;
-            var directionLength = direction.Length();
-
-            while ((currentPoint - target).Length() > directionLength)
-            {
-                currentPoint += direction;
-                AddPositionState(currentPoint);
-            }
-            
-            AddPositionState(target);
-            
-            return this;
-        }
-
-        private void AddPositionState(Vector2 position)
-        {
-            this.states.Add(new TransformState(position, LatestState().Angle));
-        }
-
-        public TransformBeatAnimation ForceSetAngle(float f)
-        {
-            LatestState().ForceSetAngle(f);
-            return this;
         }
     }
 }
