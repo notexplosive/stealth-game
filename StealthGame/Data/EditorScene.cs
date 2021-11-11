@@ -52,6 +52,7 @@ namespace StealthGame.Data
             foreach (var instruction in path.Instructions())
             {
                 var currentNode = root.transform.AddActorAsChild("Node", prevPosition);
+
                 new EditorHandle(currentNode);
                 new PathInstructionWrapper(currentNode, instruction);
                 prevPosition = instruction.EndPosition;
