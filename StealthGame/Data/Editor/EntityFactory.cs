@@ -11,5 +11,6 @@ namespace StealthGame.Data.Editor
         public abstract TEditor CreateEditorEntity(TDehydrated dehydrated, Scene scene);
         public abstract TDehydrated DehydratePlayEntity(TPlay playEntity);
         public abstract TDehydrated DehydrateEditorEntity(TEditor editorEntity);
+        public abstract TDehydrated Deserialize(string content);
     }
 }

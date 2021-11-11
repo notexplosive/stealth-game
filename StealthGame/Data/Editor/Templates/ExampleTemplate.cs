@@ -1,5 +1,6 @@
 using Machina.Components;
 using Machina.Engine;
+using Microsoft.Xna.Framework;
 
 namespace StealthGame.Data.Editor.Templates
 {
@@ -24,12 +25,22 @@ namespace StealthGame.Data.Editor.Templates
 
             public override Dehydrated DehydratePlayEntity(Play playEntity)
             {
-                return new Dehydrated(playEntity.Actor.transform);
+                return new Dehydrated(playEntity.Actor.transform.Position, playEntity.Actor.transform.Angle);
             }
 
             public override Dehydrated DehydrateEditorEntity(Editor editorEntity)
             {
-                return new Dehydrated(editorEntity.Actor.transform);
+                return new Dehydrated(editorEntity.Actor.transform.Position, editorEntity.Actor.transform.Angle);
+            }
+
+            public override Dehydrated Deserialize(string content)
+            {
+                if (content == "example")
+                {
+                    return new Dehydrated(Vector2.Zero, 0f);
+                }
+
+                return null;
             }
         }
 
@@ -45,7 +56,7 @@ namespace StealthGame.Data.Editor.Templates
 
         public class Dehydrated : Dehydrated<Example>
         {
-            public Dehydrated(Transform transform) : base(transform)
+            public Dehydrated(Vector2 position, float angle) : base(position, angle)
             {
             }
 

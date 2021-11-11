@@ -8,10 +8,10 @@ namespace StealthGame.Data.Editor
         protected readonly Vector2 position;
         protected readonly float angle;
 
-        protected Dehydrated(Transform transform)
+        protected Dehydrated(Vector2 position, float angle)
         {
-            this.position = transform.Position;
-            this.angle = transform.Angle;
+            this.position = position;
+            this.angle = angle;
         }
 
         public abstract string Serialize();
