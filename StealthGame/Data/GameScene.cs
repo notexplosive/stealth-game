@@ -19,7 +19,7 @@ namespace StealthGame.Data
         private readonly List<Wall> wallList = new List<Wall>();
         private readonly List<EnemyDetection> enemyDetections = new List<EnemyDetection>();
         private BeatTracker worldBeatTracker;
-        private EditModeToggle editMode;
+        private EditModeToggle<EditorScene> editMode;
         private Scene scene;
         private Actor player;
 
@@ -43,7 +43,7 @@ namespace StealthGame.Data
             var world = scene.AddActor("World");
             new AdvanceWorldBeat(world, this.worldBeatTracker);
 
-            this.editMode = new EditModeToggle(world, new EditorScene(this.sceneLayers));
+            this.editMode = new EditModeToggle<EditorScene>(world, new EditorScene(this.sceneLayers));
         }
 
         public Transform PlayerTransform => this.player.transform;
@@ -67,7 +67,7 @@ namespace StealthGame.Data
             new BoundingRect(wallActor, rectangle.Size);
             new BoundingRectFill(wallActor, Color.Orange);
             new Wall(wallActor, this.wallList);
-            new Editable(wallActor, this.editMode, (editor) =>
+            new Editable<EditorScene>(wallActor, this.editMode, (editor) =>
             {
                 (editor as EditorScene).AddWall(rectangle);
             });
@@ -89,7 +89,7 @@ namespace StealthGame.Data
             var enemy = new Blink(cone, blinkSequence);
             this.worldBeatTracker.RegisterBehavior(enemy);
             new EnemyDetection(enemyActor, this.enemyDetections);
-            new Editable(enemyActor, this.editMode, (editor)=>{});
+            new Editable<EditorScene>(enemyActor, this.editMode, (editor)=>{});
 
             return enemyActor;
         }
@@ -103,7 +103,7 @@ namespace StealthGame.Data
             var enemy = new AnimatedEnemy(enemyActor, animation);
             this.worldBeatTracker.RegisterBehavior(enemy);
             new EnemyDetection(enemyActor, this.enemyDetections);
-            new Editable(enemyActor, this.editMode, (editor)=>{});
+            new Editable<EditorScene>(enemyActor, this.editMode, (editor)=>{});
 
             return enemyActor;
         }

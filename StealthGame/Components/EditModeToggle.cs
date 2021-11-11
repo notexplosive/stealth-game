@@ -7,22 +7,22 @@ using StealthGame.Data;
 
 namespace StealthGame.Components
 {
-    public class EditModeToggle : BaseComponent
+    public class EditModeToggle<TScene> : BaseComponent where TScene : IScene
     {
-        private readonly IScene editorScene;
-        public event Action<IScene> EditModeToggled;
+        private readonly TScene otherScene;
+        public event Action<TScene> EditModeToggled;
 
-        public EditModeToggle(Actor actor, IScene scene) : base(actor)
+        public EditModeToggle(Actor actor, TScene scene) : base(actor)
         {
-            this.editorScene = scene;
+            this.otherScene = scene;
         }
 
         public override void OnKey(Keys key, ButtonState state, ModifierKeys modifiers)
         {
             if (key == Keys.E && modifiers.Control && state == ButtonState.Pressed)
             {
-                this.editorScene.SwitchTo(this.actor.scene);
-                EditModeToggled?.Invoke(this.editorScene);
+                this.otherScene.SwitchTo(this.actor.scene);
+                EditModeToggled?.Invoke(this.otherScene);
             }
         }
     }

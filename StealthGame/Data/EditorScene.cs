@@ -9,7 +9,7 @@ namespace StealthGame.Data
     {
         private readonly SceneLayers sceneLayers;
         private Scene scene;
-        private EditModeToggle playMode;
+        private EditModeToggle<GameScene> playMode;
 
         public EditorScene(SceneLayers sceneLayers)
         {
@@ -26,7 +26,7 @@ namespace StealthGame.Data
             this.scene = this.sceneLayers.AddNewScene();
             
             var world = this.scene.AddActor("World");
-            this.playMode = new EditModeToggle(world, new GameScene(this.sceneLayers));
+            this.playMode = new EditModeToggle<GameScene>(world, new GameScene(this.sceneLayers));
         }
 
         public void AddWall(Rectangle rectangle)
@@ -35,9 +35,9 @@ namespace StealthGame.Data
             new BoundingRect(wallActor, rectangle.Size);
             new BoundingRectFill(wallActor, Color.Orange);
             new EditorHandle(wallActor);
-            new Editable(wallActor, this.playMode, (game) =>
+            new Editable<GameScene>(wallActor, this.playMode, (game) =>
             {
-                (game as GameScene).CreateWall(rectangle);
+                game.CreateWall(rectangle);
             });
         }
     }
