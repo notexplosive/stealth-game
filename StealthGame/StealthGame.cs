@@ -32,35 +32,37 @@ namespace StealthGame
                 {
                     if (key == MouseButton.Left && state == ButtonState.Pressed)
                     {
-                        MachinaGame.Print(pos);
+                        Print(pos);
                     }
                 };
             }
 
-            var playerPathBuilder = new PlayerPathBuilder(
-                        new Vector2(200, 400))
-                    .AddStraightLine(new Vector2(900, 400))
-                    .AddStraightLine(new Vector2(900, 800))
-                    .AddStraightLine(new Vector2(1400, 800))
-                    .AddStraightLine(new Vector2(1400, 200))
-                    .AddWinPoint()
-                ;
+            var levelSequencer = new LevelSequencer(gameScene);
 
-            var level = new Level(gameScene, playerPathBuilder);
-            level.CreateBackAndForthPatroller(-MathF.PI / 2 + MathF.PI, new Vector2(500, 700), new Vector2(500, 200));
-            // level.CreateBackAndForthPatroller(MathF.PI, new Vector2(700, 700), new Vector2(500, 700));
+            var level = levelSequencer.AddLevel(new PlayerPathBuilder(
+                    new Vector2(200, 400))
+                .AddStraightLine(new Vector2(900, 400))
+                .AddStraightLine(new Vector2(900, 800))
+                .AddStraightLine(new Vector2(1400, 800))
+                .AddStraightLine(new Vector2(1400, 200))
+                .AddWinPoint(), (level) =>
+            {
+                level.CreateBackAndForthPatroller(-MathF.PI / 2 + MathF.PI, new Vector2(500, 700),
+                    new Vector2(500, 200));
+                // level.CreateBackAndForthPatroller(MathF.PI, new Vector2(700, 700), new Vector2(500, 700));
 
-            level.CreateCamera(new Vector2(1500, 600), MathF.PI / 2, -MathF.PI / 2);
-            
-            gameScene.CreateWall(new Point(100, 300), new Point(350, 350));
-            gameScene.CreateWall(new Point(100, 450), new Point(350, 500));
-            
-            gameScene.CreateWall(new Point(950, 400), new Point(1350, 750));
-            gameScene.CreateBlinkingEnemy(new TransformState(new Vector2(850, 450), MathF.PI / 2),
-                new Blink.Sequence()
-                    .AddOn(5)
-                    .AddOff(20)
-            );
+                level.CreateCamera(new Vector2(1500, 600), MathF.PI / 2, -MathF.PI / 2);
+
+                gameScene.CreateWall(new Point(100, 300), new Point(350, 350));
+                gameScene.CreateWall(new Point(100, 450), new Point(350, 500));
+
+                gameScene.CreateWall(new Point(950, 400), new Point(1350, 750));
+                gameScene.CreateBlinkingEnemy(new TransformState(new Vector2(850, 450), MathF.PI / 2),
+                    new Blink.Sequence()
+                        .AddOn(5)
+                        .AddOff(20)
+                );
+            });
         }
 
         protected override void PrepareDynamicAssets(AssetLoadTree tree)

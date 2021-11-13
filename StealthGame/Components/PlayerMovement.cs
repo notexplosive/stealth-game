@@ -1,3 +1,4 @@
+using System;
 using Machina.Components;
 using Machina.Data;
 using Machina.Engine;
@@ -10,6 +11,8 @@ namespace StealthGame.Components
 {
     public class PlayerMovement : BaseComponent
     {
+        public event Action LevelFinished;
+        
         private readonly BeatTracker tracker;
         private readonly WalkingPath path;
         private readonly TweenChain tween = new TweenChain();
@@ -44,7 +47,13 @@ namespace StealthGame.Components
                     EaseFuncs.Linear,
                     this.tweenablePosition);
             }
-
+            else
+            {
+                if (this.path.TotalBeats() == this.tracker.CurrentBeat)
+                {
+                    LevelFinished?.Invoke();
+                }
+            }
         }
     }
 }

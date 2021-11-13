@@ -12,11 +12,17 @@ namespace StealthGame.Data
     public class Level
     {
         private readonly GameScene gameScene;
+        public event Action<Level> onLoad;
 
-        public Level(GameScene gameScene, PlayerPathBuilder playerPathBuilder)
+        public Level(GameScene gameScene, PlayerPathBuilder playerPathBuilder, LevelSequencer levelSequencer)
         {
             this.gameScene = gameScene;
-            this.gameScene.CreatePlayer(playerPathBuilder);
+            var player = this.gameScene.CreatePlayer(playerPathBuilder);
+
+            player.LevelFinished += () =>
+            {
+                levelSequencer.NextLevel();
+            };
         }
 
         public void CreateBackAndForthPatroller(float startAngle, Vector2 p1, Vector2 p2 )
@@ -44,6 +50,11 @@ namespace StealthGame.Data
                 ;
 
             this.gameScene.CreateMovingEnemy(new TransformBeatAnimation(builder, start));
+        }
+
+        public void Load()
+        {
+            onLoad?.Invoke(this);
         }
     }
 }

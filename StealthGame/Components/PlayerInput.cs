@@ -22,7 +22,7 @@ namespace StealthGame.Components
         {
             if (this.hasBeenCaught)
             {
-                this.beatTracker.SubtractBeat(dt * 20);
+                this.beatTracker.SubtractBeat(dt * 60);
                 if (this.beatTracker.CurrentBeat == 0)
                 {
                     this.hasBeenCaught = false;
