@@ -15,7 +15,7 @@ namespace StealthGame
 {
     public class StealthGame : MachinaGame
     {
-        public StealthGame(string[] args) : base("Stealth Game", args, new Point(1920, 1080), new Point(1920, 1080),
+        public StealthGame(string[] args) : base("Stealth Game", args, new Point(1600, 900), new Point(1920, 1080),
             ResizeBehavior.MaintainDesiredResolution)
         {
         }
@@ -38,8 +38,20 @@ namespace StealthGame
             }
 
             var levelSequencer = new LevelSequencer(gameScene);
+            
+            levelSequencer.AddLevel(new PlayerPathBuilder(
+                    new Vector2(200, 600))
+                .AddStraightLine(new Vector2(800, 600))
+                .AddWinPoint(), (level) =>
+            {
+                gameScene.CreateBlinkingEnemy(new TransformState(new Vector2(850, 450), MathF.PI / 2),
+                    new Blink.Sequence()
+                        .AddOn(5)
+                        .AddOff(20)
+                );
+            });
 
-            var level = levelSequencer.AddLevel(new PlayerPathBuilder(
+            levelSequencer.AddLevel(new PlayerPathBuilder(
                     new Vector2(200, 400))
                 .AddStraightLine(new Vector2(900, 400))
                 .AddStraightLine(new Vector2(900, 800))

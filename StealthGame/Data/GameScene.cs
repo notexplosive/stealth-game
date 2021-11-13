@@ -25,6 +25,7 @@ namespace StealthGame.Data
         private Scene scene;
         private Actor player;
         private PlayerInput playerInput;
+        private Actor entityRoot;
 
         public GameScene(SceneLayers sceneLayers)
         {
@@ -40,6 +41,7 @@ namespace StealthGame.Data
 
             this.scene = this.sceneLayers.AddNewScene();
 
+            this.entityRoot = this.scene.AddActor("Entities");
             this.worldBeatTracker = new BeatTracker(true);
             this.worldBeatTracker.LoopHit += () => { MachinaGame.Print("Loop!"); };
 
@@ -54,7 +56,7 @@ namespace StealthGame.Data
             var path = playerPathBuilder.Build();
             var playerBeatTracker = new BeatTracker(false);
 
-            this.player = this.scene.AddActor("Player");
+            this.player = this.entityRoot.transform.AddActorAsChild("Player");
             this.playerInput = new PlayerInput(this.player, playerBeatTracker);
             var playerMovement = new PlayerMovement(this.player, playerBeatTracker, path);
             new CircleRenderer(this.player, 32, Color.Orange);
@@ -66,7 +68,7 @@ namespace StealthGame.Data
 
         public void CreateWall(Point topLeft, Point bottomRight)
         {
-            var wallActor = this.scene.AddActor("enemy", topLeft.ToVector2());
+            var wallActor = this.entityRoot.transform.AddActorAsChild("enemy", topLeft.ToVector2());
             var boundingRect = new BoundingRect(wallActor, new Point(bottomRight.X - topLeft.X, bottomRight.Y - topLeft.Y));
             new BoundingRectFill(wallActor, Color.Orange);
             new Wall(wallActor, this.wallList);
@@ -80,7 +82,7 @@ namespace StealthGame.Data
 
         public Actor CreateBlinkingEnemy(TransformState state, Blink.Sequence blinkSequence)
         {
-            var enemyActor = this.scene.AddActor("enemy", state.position);
+            var enemyActor = this.entityRoot.transform.AddActorAsChild("enemy", state.position);
             new LineOfSight(enemyActor, this, GetWalls);
             new FacingDirection(enemyActor, state.Angle);
             var cone = new ConeOfVision(enemyActor, MathF.PI / 2);
@@ -97,7 +99,7 @@ namespace StealthGame.Data
 
         public void CreateMovingEnemy(TransformBeatAnimation animation)
         {
-            var enemyActor = this.scene.AddActor("enemy", animation.startingState.position);
+            var enemyActor = this.entityRoot.transform.AddActorAsChild("enemy", animation.startingState.position);
             new LineOfSight(enemyActor, this, GetWalls);
             new FacingDirection(enemyActor, animation.startingState.Angle);
             new ConeOfVision(enemyActor, MathF.PI / 2);
@@ -112,19 +114,28 @@ namespace StealthGame.Data
 
         public void CreatePath(PlayerPathBuilder playerPathBuilder)
         {
-            var path = this.scene.AddActor("Path");
+            var path = this.entityRoot.transform.AddActorAsChild("Path");
             new PathRenderer(path, playerPathBuilder.Build(), this.enemyDetections);
         }
 
         public void LoadLevel(Level level)
         {
-            this.scene.DeleteAllActors();
+            DeleteAllEntities();
+            this.worldBeatTracker.Reset();
             level.Load();
         }
 
         public void WinScreen()
         {
-            this.scene.DeleteAllActors();
+            DeleteAllEntities();
+        }
+
+        private void DeleteAllEntities()
+        {
+            for (int i = 0; i < this.entityRoot.transform.ChildCount; i++)
+            {
+                this.entityRoot.transform.ChildAt(i).Delete();
+            }
         }
     }
 }

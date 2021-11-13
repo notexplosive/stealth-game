@@ -32,7 +32,7 @@ namespace StealthGame.Data
         public Level AddLevel(PlayerPathBuilder playerPathBuilder, Action<Level> onLoad)
         {
             var level = new Level(gameScene, playerPathBuilder, this);
-            level.onLoad += onLoad;
+            level.OnLoad += onLoad;
             this.levels.Add(level);
 
             if (this.levels.Count == 1)

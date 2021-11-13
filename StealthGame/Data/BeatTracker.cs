@@ -127,5 +127,10 @@ namespace StealthGame.Data
             BeatHit += behavior.OnBeat;
             AppendTotalBeatCount(behavior.TotalBeats);
         }
+
+        public void Reset()
+        {
+            this.internalBeat = 0;
+        }
     }
 }

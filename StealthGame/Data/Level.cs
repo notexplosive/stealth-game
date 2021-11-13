@@ -12,16 +12,17 @@ namespace StealthGame.Data
     public class Level
     {
         private readonly GameScene gameScene;
-        public event Action<Level> onLoad;
+        public event Action<Level> OnLoad;
 
         public Level(GameScene gameScene, PlayerPathBuilder playerPathBuilder, LevelSequencer levelSequencer)
         {
             this.gameScene = gameScene;
-            var player = this.gameScene.CreatePlayer(playerPathBuilder);
 
-            player.LevelFinished += () =>
+            OnLoad += (level) =>
             {
-                levelSequencer.NextLevel();
+                var player = level.gameScene.CreatePlayer(playerPathBuilder);
+
+                player.LevelFinished += levelSequencer.NextLevel;
             };
         }
 
@@ -54,7 +55,7 @@ namespace StealthGame.Data
 
         public void Load()
         {
-            onLoad?.Invoke(this);
+            OnLoad?.Invoke(this);
         }
     }
 }
