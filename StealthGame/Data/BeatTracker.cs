@@ -17,6 +17,11 @@ namespace StealthGame.Data
         {
             this.doesLoop = doesLoop;
         }
+
+        public void AddWholeBeat()
+        {
+            AddBeat(Beat2Seconds(1));
+        }
         
         public void AddBeat(float dt)
         {

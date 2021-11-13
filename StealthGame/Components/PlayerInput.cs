@@ -53,7 +53,7 @@ namespace StealthGame.Components
 
             if (state == ButtonState.Pressed)
             {
-                this.beatTracker.AddBeat(1f/ 30);
+                this.beatTracker.AddWholeBeat();
             }
         }
 

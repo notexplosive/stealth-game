@@ -33,6 +33,11 @@ namespace StealthGame.Components
         public override void Update(float dt)
         {
             MoveToNextPoint();
+            
+            if (this.tracker.CurrentBeat >= this.path.TotalBeats())
+            {
+                LevelFinished?.Invoke();
+            }
             this.tween.Update(dt);
         }
 
@@ -43,16 +48,10 @@ namespace StealthGame.Components
 
             if (this.currentTargetPosition != previousTarget)
             {
+                this.tween.Clear();
                 this.tween.AppendVectorTween(this.currentTargetPosition, BeatTracker.SecondsPerBeat,
                     EaseFuncs.Linear,
                     this.tweenablePosition);
-            }
-            else
-            {
-                if (this.path.TotalBeats() == this.tracker.CurrentBeat)
-                {
-                    LevelFinished?.Invoke();
-                }
             }
         }
     }

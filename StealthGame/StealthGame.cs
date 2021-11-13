@@ -38,8 +38,8 @@ namespace StealthGame
             }
 
             var levelSequencer = new LevelSequencer(gameScene);
-            
-            levelSequencer.AddLevel(new PlayerPathBuilder(
+
+            levelSequencer.AddLevel("Intro level", new PlayerPathBuilder(
                     new Vector2(200, 600))
                 .AddStraightLine(new Vector2(800, 600))
                 .AddWinPoint(), (level) =>
@@ -50,8 +50,22 @@ namespace StealthGame
                         .AddOff(20)
                 );
             });
+            
+            levelSequencer.AddLevel("Spiral", new PlayerPathBuilder(
+                        new Vector2(200,200))
+                    .AddStraightLine(new Vector2(1000, 200))
+                    .AddStraightLine(new Vector2(1000, 700))
+                    .AddStraightLine(new Vector2(300, 700))
+                    .AddStraightLine(new Vector2(300, 300))
+                ,
+                (level) =>
+                {
+                    gameScene.CreateWall(new Point(300, 250), new Point(350, 300));
+                    level.CreateCamera(new Vector2(600,400),0f, MathF.PI * 2, 60);
+                }
+            );
 
-            levelSequencer.AddLevel(new PlayerPathBuilder(
+            levelSequencer.AddLevel("Sandbox",new PlayerPathBuilder(
                     new Vector2(200, 400))
                 .AddStraightLine(new Vector2(900, 400))
                 .AddStraightLine(new Vector2(900, 800))

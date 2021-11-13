@@ -40,13 +40,13 @@ namespace StealthGame.Data
             this.gameScene.CreateMovingEnemy(new TransformBeatAnimation(builder, start));
         }
 
-        public void CreateCamera(Vector2 position, float angle1, float angle2)
+        public void CreateCamera(Vector2 position, float angle1, float angle2, int rotationSpeed = 20)
         {
             var start = new TransformState(position, angle1);
             var builder = new AnimationBuilder()
-                    .LookTo(angle2, 20)
+                    .LookTo(angle2, rotationSpeed)
                     .WaitFor(10)
-                    .LookTo(angle1, 20)
+                    .LookTo(angle1, rotationSpeed)
                     .WaitFor(10)
                 ;
 
