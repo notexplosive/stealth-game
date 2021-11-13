@@ -35,7 +35,7 @@ namespace StealthGame.Components
                     this.beatTracker.SubtractBeat(dt);
                 }
 
-                if (this.spaceIsPressed)
+                if (this.spaceIsPressed && MachinaGame.DebugLevel >= DebugLevel.Passive)
                 {
                     this.beatTracker.AddBeat(dt);
                 }   
@@ -49,6 +49,11 @@ namespace StealthGame.Components
             if (key == Keys.Space)
             {
                 this.spaceIsPressed = state == ButtonState.Pressed;
+            }
+
+            if (state == ButtonState.Pressed)
+            {
+                this.beatTracker.AddBeat(1f/ 30);
             }
         }
 
