@@ -56,22 +56,12 @@ namespace StealthGame.Components
             {
                 var beatDurationOfWholePath = this.walkingPath.TotalBeats();
 
-                float[] ghostIncrements = new float[] { 0f, beatDurationOfWholePath / 4, beatDurationOfWholePath / 2, beatDurationOfWholePath * 3 / 4 };
-
                 var highlight = false;
                 var isWithinCone = false;
 
                 foreach (var cone in this.enemies)
                 {
                     isWithinCone = isWithinCone || cone.CanSeePoint(renderedNode.position);
-                }
-
-                foreach (var ghostIncrement in ghostIncrements)
-                {
-                    int alongBeat = ((int) (this.currentBeat + ghostIncrement)) % beatDurationOfWholePath;
-                    var positionAtBeat = this.walkingPath.PathNodeAtBeat(alongBeat).position;
-
-                    highlight = highlight || (positionAtBeat == renderedNode.position);
                 }
 
                 var depthOffset = highlight ? -1 : 0;
