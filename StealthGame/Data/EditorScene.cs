@@ -73,7 +73,7 @@ namespace StealthGame.Data
             CreateEditorHandle(wallActor);
             new Editable<GameScene>(wallActor, this.playMode, (game) =>
             {
-                game.CreateWall(boundingRect.Rect);
+                // game.CreateWall(boundingRect.Rect);
             });
         }
 

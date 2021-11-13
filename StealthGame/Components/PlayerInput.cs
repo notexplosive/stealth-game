@@ -11,6 +11,7 @@ namespace StealthGame.Components
         private readonly BeatTracker beatTracker;
         private bool spaceIsPressed;
         private bool shiftIsDown;
+        private bool hasBeenCaught;
 
         public PlayerInput(Actor actor, BeatTracker beatTracker) : base(actor)
         {
@@ -19,14 +20,25 @@ namespace StealthGame.Components
 
         public override void Update(float dt)
         {
-            if (this.shiftIsDown)
+            if (this.hasBeenCaught)
             {
-                this.beatTracker.SubtractBeat(dt);
+                this.beatTracker.SubtractBeat(dt * 20);
+                if (this.beatTracker.CurrentBeat == 0)
+                {
+                    this.hasBeenCaught = false;
+                }
             }
-
-            if (this.spaceIsPressed)
+            else
             {
-                this.beatTracker.AddBeat(dt);
+                if (this.shiftIsDown)
+                {
+                    this.beatTracker.SubtractBeat(dt);
+                }
+
+                if (this.spaceIsPressed)
+                {
+                    this.beatTracker.AddBeat(dt);
+                }   
             }
         }
 
@@ -38,6 +50,11 @@ namespace StealthGame.Components
             {
                 this.spaceIsPressed = state == ButtonState.Pressed;
             }
+        }
+
+        public void Caught()
+        {
+            this.hasBeenCaught = true;
         }
     }
 }

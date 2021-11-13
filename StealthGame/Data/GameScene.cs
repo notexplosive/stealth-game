@@ -24,6 +24,7 @@ namespace StealthGame.Data
         private EditModeToggle<EditorScene> editMode;
         private Scene scene;
         private Actor player;
+        private PlayerInput playerInput;
 
         public GameScene(SceneLayers sceneLayers)
         {
@@ -48,15 +49,13 @@ namespace StealthGame.Data
             this.editMode = new EditModeToggle<EditorScene>(world, new EditorScene(this.sceneLayers));
         }
 
-        public Transform PlayerTransform => this.player.transform;
-
         public void CreatePlayer(PlayerPathBuilder playerPathBuilder)
         {
             var path = playerPathBuilder.Build();
             var playerBeatTracker = new BeatTracker(false);
 
             this.player = this.scene.AddActor("Player");
-            new PlayerInput(this.player, playerBeatTracker);
+            this.playerInput = new PlayerInput(this.player, playerBeatTracker);
             new PlayerMovement(this.player, playerBeatTracker, path);
             new CircleRenderer(this.player, 32, Color.Orange);
             new Editable<EditorScene>(this.player, this.editMode, (editor) => { editor.AddPlayerPath(playerPathBuilder); });
@@ -64,10 +63,10 @@ namespace StealthGame.Data
             CreatePath(playerPathBuilder);
         }
 
-        public void CreateWall(Rectangle rectangle)
+        public void CreateWall(Point topLeft, Point bottomRight)
         {
-            var wallActor = this.scene.AddActor("enemy", rectangle.Location.ToVector2());
-            var boundingRect = new BoundingRect(wallActor, rectangle.Size);
+            var wallActor = this.scene.AddActor("enemy", topLeft.ToVector2());
+            var boundingRect = new BoundingRect(wallActor, new Point(bottomRight.X - topLeft.X, bottomRight.Y - topLeft.Y));
             new BoundingRectFill(wallActor, Color.Orange);
             new Wall(wallActor, this.wallList);
             new Editable<EditorScene>(wallActor, this.editMode, (editor) => { editor.AddWall(boundingRect.Rect); });
@@ -86,7 +85,7 @@ namespace StealthGame.Data
             var cone = new ConeOfVision(enemyActor, MathF.PI / 2);
             var enemy = new Blink(cone, blinkSequence);
             this.worldBeatTracker.RegisterBehavior(enemy);
-            new EnemyDetection(enemyActor, this.enemyDetections);
+            new EnemyDetection(enemyActor, this.enemyDetections, this.playerInput);
             new Editable<EditorScene>(enemyActor, this.editMode, (editor) =>
             {
                 editor.AddBlinkingEnemy(state, blinkSequence);
@@ -103,7 +102,7 @@ namespace StealthGame.Data
             new ConeOfVision(enemyActor, MathF.PI / 2);
             var enemy = new AnimatedEnemy(enemyActor, animation);
             this.worldBeatTracker.RegisterBehavior(enemy);
-            new EnemyDetection(enemyActor, this.enemyDetections);
+            new EnemyDetection(enemyActor, this.enemyDetections, this.playerInput);
             new Editable<EditorScene>(enemyActor, this.editMode, (editor) =>
             {
                 editor.AddMovingEnemy(animation);

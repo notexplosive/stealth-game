@@ -10,12 +10,10 @@ namespace StealthGame.Components
 {
     public class LineOfSight : BaseComponent
     {
-        private readonly Transform playerTransform;
         private readonly Func<IList<Wall>> getWalls;
 
         public LineOfSight(Actor actor, GameScene gameScene, Func<IList<Wall>> getWalls) : base(actor)
         {
-            this.playerTransform = gameScene.PlayerTransform;
             this.getWalls = getWalls;
         }
 

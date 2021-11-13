@@ -32,5 +32,18 @@ namespace StealthGame.Data
 
             this.gameScene.CreateMovingEnemy(new TransformBeatAnimation(builder, start));
         }
+
+        public void CreateCamera(Vector2 position, float angle1, float angle2)
+        {
+            var start = new TransformState(position, angle1);
+            var builder = new AnimationBuilder()
+                    .LookTo(angle2, 20)
+                    .WaitFor(10)
+                    .LookTo(angle1, 20)
+                    .WaitFor(10)
+                ;
+
+            this.gameScene.CreateMovingEnemy(new TransformBeatAnimation(builder, start));
+        }
     }
 }

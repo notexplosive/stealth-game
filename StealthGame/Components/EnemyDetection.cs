@@ -10,13 +10,23 @@ namespace StealthGame.Components
         private readonly ConeOfVision coneOfVision;
         private readonly LineOfSight lineOfSight;
         private readonly List<EnemyDetection> gameEnemies;
+        private readonly PlayerInput player;
 
-        public EnemyDetection(Actor actor, List<EnemyDetection> gameEnemies) : base(actor)
+        public EnemyDetection(Actor actor, List<EnemyDetection> gameEnemies, PlayerInput player) : base(actor)
         {
             this.lineOfSight = RequireComponent<LineOfSight>();
             this.coneOfVision = RequireComponent<ConeOfVision>();
             this.gameEnemies = gameEnemies;
             this.gameEnemies.Add(this);
+            this.player = player;
+        }
+
+        public override void Update(float dt)
+        {
+            if (CanSeePoint(this.player.transform.Position))
+            {
+                this.player.Caught();
+            }
         }
 
         public override void OnDeleteFinished()
