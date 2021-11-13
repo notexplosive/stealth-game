@@ -40,15 +40,25 @@ namespace StealthGame
             var levelSequencer = new LevelSequencer(gameScene);
 
             levelSequencer.AddLevel("Intro level", new PlayerPathBuilder(
-                    new Vector2(200, 600))
-                .AddStraightLine(new Vector2(800, 600))
+                    new Vector2(200, 450))
+                .AddStraightLine(new Vector2(1400, 450))
                 .AddWinPoint(), (level) =>
             {
-                gameScene.CreateBlinkingEnemy(new TransformState(new Vector2(850, 450), MathF.PI / 2),
+            });
+            
+            levelSequencer.AddLevel("Pillars", new PlayerPathBuilder(
+                    new Vector2(200, 300))
+                .AddStraightLine(new Vector2(1400, 300))
+                .AddWinPoint(), (level) =>
+            {
+                gameScene.CreateWall(new Point(300, 400), new Point(400, 450));
+                gameScene.CreateWall(new Point(600, 400), new Point(700, 450));
+                gameScene.CreateWall(new Point(900, 400), new Point(1000, 450));
+
+                gameScene.CreateBlinkingEnemy(new TransformState(new Vector2(800, 800), MathF.PI / 2), 
                     new Blink.Sequence()
-                        .AddOn(5)
                         .AddOff(20)
-                );
+                        .AddOn(40));
             });
             
             levelSequencer.AddLevel("Spiral", new PlayerPathBuilder(
